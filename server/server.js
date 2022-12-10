@@ -11,7 +11,7 @@ const HTTP = http.Server(Api);
 Api.use(cors());
 
 Api.get('/test', (req, res) => res.status(200).send('success!'));
-
+require("./routes/users.routes.js")(Api);
 HTTP.listen(9001, () => {
     console.log('listening on *:9001');
 });
