@@ -11,9 +11,9 @@ const App = () => {
     });
 
     return (
-        <div>
-            <h2>Electron is running! sss</h2>
-            <p>Fetched api response from server: {successText}</p>
+        <div className="bg-purple-200">
+            <h2 className="text-3xl font-bold underline">Electron is ! </h2>
+            <p className="text-red-500">Fetched api response from server: {successText}</p>
         </div>
     );
 };
