@@ -3,7 +3,24 @@ const {app, BrowserWindow} = require('electron');
 const isDev = require('electron-is-dev');
 const path = require('path');
 const url = require('url');
+const { join } = require('path');
+  
+const fs = require('fs')
+const dbPath = isDev ? join(__dirname, './prisma/nationaldb.db') : path.join(app.getPath("userData"), "database.db")
 
+if (!isDev) {
+    try {
+        // database file does not exist, need to create
+        fs.copyFileSync(join(process.resourcesPath, 'prisma/nationaldb.db'), dbPath, fs.constants.COPYFILE_EXCL)
+        console.log("New database file created")
+    } catch (err) {
+        if (err.code != "EEXIST") {
+            console.error(`Failed creating sqlite file.`, err)
+        } else {
+            console.log("Database file detected")
+        }
+    }
+}
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
@@ -12,14 +29,15 @@ function createWindow() {
     // express server is started here when production build
     if (!isDev) {
         require(path.join(__dirname, 'build-server/server'));
-    }
+    } 
 
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
-            nodeIntegration: true
+            nodeIntegration: true,
+            webSecurity: false
         }
     });
 

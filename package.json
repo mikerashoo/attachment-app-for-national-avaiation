@@ -1,12 +1,9 @@
 {
-  "name": "electron-react-node-boilerplate",
+  "name": "national-aviation-collage",
   "version": "1.0.0",
   "description": "An Electron application with React and Node",
   "main": "./main.js",
   "homepage": "./",
-  "prisma": {
-    "seed": "node prisma\\seed.js"
-  },
   "scripts": {
     "start": "concurrently \"npm run react-start\" \"npm run server-start\" \"wait-on http://localhost:3000 && npm run electron-dev\"",
     "react-build": "react-app-rewired build",
@@ -40,6 +37,8 @@
     "@headlessui/react": "^1.7.5",
     "@heroicons/react": "^2.0.13",
     "@prisma/client": "^4.7.1",
+    "@swc/core": "^1.3.22",
+    "@swc/wasm": "^1.3.22",
     "app-module-path": "^2.2.0",
     "autoprefixer": "^10.4.13",
     "axios": "^0.18.0",
@@ -48,13 +47,17 @@
     "cross-env": "^7.0.3",
     "electron-is-dev": "^1.1.0",
     "express": "^4.17.1",
+    "moment": "^2.29.4",
     "nodemon": "^1.19.1",
     "piping": "^1.0.0-rc.4",
     "react": "^16.8.6",
     "react-bootstrap": "^2.7.0",
+    "react-bootstrap-typeahead": "^6.0.0",
     "react-dom": "^16.8.6",
     "react-router-dom": "^6.4.5",
-    "tailwindcss": "^3.2.4"
+    "react-to-print": "^2.14.10",
+    "tailwindcss": "^3.2.4",
+    "ts-node": "^10.9.1"
   },
   "build": {
     "appId": "com.electron-react-node",
@@ -62,11 +65,29 @@
       "build/**/**/*",
       "build-server/**/**/*",
       "node_modules/**/*",
-      "./main.js"
+      "./main.js",
+      "prisma/**/*",
+      "resources/**/*",
+      "!**/node_modules/@prisma/engines/introspection-engine*",
+      "!**/node_modules/@prisma/engines/migration-engine*",
+      "!**/node_modules/@prisma/engines/prisma-fmt*",
+      "!**/node_modules/@prisma/engines/query_engine-*",
+      "!**/node_modules/@prisma/engines/libquery_engine*",
+      "!**/node_modules/prisma/query_engine*",
+      "!**/node_modules/prisma/libquery_engine*",
+      "!**/node_modules/prisma/**/*.mjs"
     ],
     "directories": {
       "buildResources": "assets"
-    }
+    },
+    "extraResources": [
+      "prisma/**/*",
+      "node_modules/.prisma/**/*",
+      "node_modules/@prisma/client/**/*",
+      "node_modules/@prisma/engines/migration-engine*",
+      "node_modules/@prisma/engines/query*",
+      "node_modules/@prisma/engines/libquery*"
+    ]
   },
   "browserslist": []
 }

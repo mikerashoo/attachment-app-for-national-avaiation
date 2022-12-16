@@ -9,7 +9,7 @@ export const findAll = async (req, res)  => {
         res.status(200).json({data: users})
     }
     catch(e){
-        res.status(500).json({"error": e}) 
+        res.status(500).json({"error": e.message}) 
     }
       
   }
@@ -25,6 +25,6 @@ export const findAll = async (req, res)  => {
         res.status(200).json({data: user})
     }
     catch(e){
-        res.status(500).json({"error": e}) 
+        res.status(500).json({"error": e.message}) 
     }
   }

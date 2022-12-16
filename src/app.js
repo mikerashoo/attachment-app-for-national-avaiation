@@ -1,16 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import {api} from './api';
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link,
+import { 
+     HashRouter,
+    Route, 
     Routes,
     BrowserRouter
   } from "react-router-dom";
-import Home from './pages/home';
-import ManageStudentPage from './pages/manage_students';
+import Home from './pages/home'; 
 import Navbar from './components/navbar';
+import ManagePage from './pages/manage'; 
+import PrintPage from './pages/printPage';
+import Reports from './pages/reports';
 const App = () => {
     const [successText, setSuccessText] = useState(null);
 
@@ -30,7 +30,9 @@ const App = () => {
             renders the first one that matches the current URL. */}
         <Routes>
            
-          <Route path="/student_managemenet" element={<ManageStudentPage />}/>
+          <Route path="/manage" element={<ManagePage />}/> 
+          <Route path="/print" element={<PrintPage />}/> 
+          <Route path="/reports" element={<Reports />}/> 
              
           <Route path="/" element={<Home />}/>
              

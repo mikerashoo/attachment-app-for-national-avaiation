@@ -7,7 +7,7 @@ export const all = async (req, res)  => {
         res.status(200).json( departements)
     }
     catch(e){
-        res.status(500).json({"error": e}) 
+        res.status(500).json({"error": e.message}) 
     }
       
   }
@@ -24,6 +24,6 @@ export const all = async (req, res)  => {
         res.status(200).json(departement)
     }
     catch(e){
-        res.status(500).json({"error": e}) 
+        res.status(500).json({"error": e.message}) 
     }
   }
