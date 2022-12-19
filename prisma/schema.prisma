@@ -1,0 +1,26 @@
+datasource db {
+    provider = "sqlite"
+    url      = "file:./dev.db"
+}
+
+generator client {
+    provider      = "prisma-client-js"
+    engineType    = "library"
+    binaryTargets = ["native", "windows"]
+}
+
+model User {
+    id    Int     @id @default(autoincrement())
+    email String  @unique
+    name  String?
+}
+
+model Payment {
+    id   Int    @id @default(autoincrement())
+    name String @unique
+}
+
+model Departement {
+    id   Int    @id @default(autoincrement())
+    name String @unique
+}
