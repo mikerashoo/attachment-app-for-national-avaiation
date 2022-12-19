@@ -14,10 +14,10 @@
   }
 
   .txt-primary{
-    @apply text-blue-600
+    @apply text-indigo-600
   }
 
   .bg-primary {
-    @apply text-white bg-blue-500
+    @apply text-white bg-indigo-500
   }
 }

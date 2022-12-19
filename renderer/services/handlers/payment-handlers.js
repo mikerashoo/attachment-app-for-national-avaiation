@@ -1,12 +1,12 @@
-import { PAYMENT_CRUD_CALLS } from "./ipc_calls";
-import osApi from "./osapi"
-import responseModifier from "./response_modifier";
+import { PAYMENT_CRUD_CALLS } from "../ipc_calls";
+import osApi from "../osapi"
+import responseModifier from "../response_modifier";
 
 
 export const checkAndInitializePaymentTypes = async () => {
     try{
         const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.checkAndInitializePaymentTypesCall);
-        console.log("Does payment types exist?", response);
+        
         return response;
     }catch(e){
         return e;

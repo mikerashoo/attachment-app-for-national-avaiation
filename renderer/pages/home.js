@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import { Layout } from 'antd'; 
 import PageLayout from '../components/layouts/PageLayout';
-import { checkAndInitializePaymentTypes } from '../services/payment-services';
+import { checkAndInitializePaymentTypes } from '../services/handlers/payment-handlers';
 const { Content } = Layout; 
  
 const Home = () => { 

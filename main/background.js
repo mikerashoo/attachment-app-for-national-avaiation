@@ -41,7 +41,7 @@ if (isProd) {
   const mainWindow = createWindow('main', {
     width: 1000,
     height: 600,
-  });
+  }); 
 
   if (isProd) {
     await mainWindow.loadURL('app://./home.html');
@@ -76,4 +76,5 @@ function loadMainProcess() {
 
 require('./main-process/user-controller')
 require('./main-process/payment-controller')
+require('./main-process/departement-controller')
  

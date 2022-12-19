@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'; 
 import {Layout, Menu } from 'antd'; 
-import { UserOutlined, DollarOutlined } from '@ant-design/icons'; 
+import { UserOutlined, DollarOutlined, BookOutlined } from '@ant-design/icons'; 
 import UsersComponent from '../components/management/users'; 
 import PageLayout from '../components/layouts/PageLayout';
 import PaymentTypeManagement from '../components/management/PaymentTypesManagement';
+import DepartementManagement from '../components/management/DepartementManagement';
 const { Header, Content, Sider } = Layout; 
 const menuKeys = {
 	'user': 'user',
     'payments': 'payments',
+    'departement': 'departement',
 }
 
 const ManagementPage = () => { 
@@ -28,7 +30,13 @@ const ManagementPage = () => {
       icon: <DollarOutlined />,
 
     },
-    
+    {
+        key: menuKeys.departement,  
+        label: "Departement ",
+        icon: <BookOutlined />,
+  
+      },
+      
   ]
   const style = {backgroundColor: 'transparent'}
   function getItem(label, key, icon, children) {
@@ -63,8 +71,9 @@ const ManagementPage = () => {
 			<Layout className='w-full'>
 					<Content className='p-4 bg-white ml-2 border-1 w-full'> 
                      
-					{selectedKey === menuKeys.user && <UsersComponent />}
-					{selectedKey === menuKeys.payments && <PaymentTypeManagement />}
+                        {selectedKey === menuKeys.user && <UsersComponent />}
+                        {selectedKey === menuKeys.payments && <PaymentTypeManagement />}
+                        {selectedKey === menuKeys.departement && <DepartementManagement />}
 					</Content>
 			</Layout>  
 	</PageLayout>

@@ -1,4 +1,7 @@
-- test ipc communication 
-- test prisma 
-- electron folder structure
-- 
+- db schema 
+- ipcall constants
+- controllers
+- add controller to server
+- add page
+- fetch 
+- create 

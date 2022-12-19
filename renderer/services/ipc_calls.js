@@ -9,3 +9,8 @@ export const PAYMENT_CRUD_CALLS = {
     checkAndInitializePaymentTypesCall:'check-and-initialize-payment-types',
     changePaymentTypeStatusCall: 'change-payment-type-status',
 }
+
+export const DEPARTEMENT_CRUD_CALLS = {
+    getAllDepartementsCall: 'get-all-departements',
+    createDepartementsCall: 'create-departements',
+}
