@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 
 import '../styles/globals.css';  
 import '../styles/App.css';
+import '../styles/management.css'
+
 import { checkAndInitializePaymentTypes } from '../services/payment-services';
 function MyApp({ Component, pageProps }) {
 

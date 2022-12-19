@@ -3,9 +3,9 @@ import Navbar from "./navbar";
 
 export default function PageLayout({ children }) {
     return (
-      <Layout className="h-screen bg-red-50" >
+      <Layout className="h-screen">
         <Navbar />
-        <Layout className="h-full">{children}</Layout> 
+        <Layout className="h-full px-8 py-4">{children}</Layout> 
       </Layout>
     )
   }
