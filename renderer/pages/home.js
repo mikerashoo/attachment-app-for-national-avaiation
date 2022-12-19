@@ -7,7 +7,8 @@ import { Breadcrumb, Button, Card, DatePicker, Layout, Menu } from 'antd';
 import { CalendarOutlined, DollarOutlined, LaptopOutlined, MailOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import ManageMenu from '../components/manage_menus';
 import UsersComponent from '../components/users';
-import PaymentManagement from '../components/payments';
+import PaymentManagement from '../components/payments'; 
+import PageLayout from '../components/layouts/PageLayout';
 const { Header, Content, Sider } = Layout;
 
 const menuKeys = {
@@ -52,46 +53,21 @@ const Home = () => {
     };
   } 
 
-  const onClick = (item) => {
+  const onMenuItemClick = (item) => {
 	setSelectedKey(item.key);
   }
  
     return (
-    <Layout className="layout h-screen" >
-		<Header>
-		<div className="logo" />
-		<Menu
-			theme="dark"
-			mode="horizontal"
-			defaultSelectedKeys={['2']}
-			items={new Array(3).fill(null).map((_, index) => {
-			const key = index + 1;
-			return {
-				key,
-				label: `nav ${key}`,
-			};
-			})}
-		/>
-		</Header>
-		
+   <PageLayout>
 		<Layout className='mx-8 px-8 py-4 h-full my-4'>
-			<Sider className='bg-white pt-4' style={{backgroundColor: 'white'}} width={250}> 
-					<Menu
-					onClick={onClick}
-					style={{
-					width: 250,
-					}}
-				items={myItems.map(_item => getItem(_item.label, _item.key, _item.icon))}
-				/>
-			</Sider> 
-			<Layout>
-					<Content> 
-					{selectedKey === menuKeys.user && <UsersComponent />}
-					{selectedKey === menuKeys.payments && <PaymentManagement />}
-					</Content>
-			</Layout> 
-		</Layout>
-	</Layout>
+			 
+				<Content className='p-4 bg-white ml-2'> 
+					<div>
+						<h1>Home Page</h1>
+					</div>
+				</Content> 
+		</Layout> 
+    </PageLayout>
   );
 }
 

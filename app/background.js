@@ -165,11 +165,17 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "PAYMENT_CRUD_CALLS": () => (/* binding */ PAYMENT_CRUD_CALLS),
 /* harmony export */   "USER_CRUD_CALLS": () => (/* binding */ USER_CRUD_CALLS)
 /* harmony export */ });
 const USER_CRUD_CALLS = {
   getAll: 'get-all-users',
   create: 'create-user'
+};
+const PAYMENT_CRUD_CALLS = {
+  getAllPaymentTypes: 'get-all-payment-types',
+  createPaymentType: 'create-payment-type',
+  checkAndInitializePaymentTypes: 'check-and-initialize-payment-types'
 };
 
 /***/ }),
@@ -191,11 +197,50 @@ const {
 const {
   default: appPrisma
 } = __webpack_require__(/*! ../my-prisma */ "./main/my-prisma.js");
-ipcMain.on('all-payments', async event => {
+const {
+  PAYMENT_CRUD_CALLS
+} = __webpack_require__(/*! ../ipc_calls */ "./main/ipc_calls.js");
+const defaultPaymentTypes = [{
+  name: 'Registration fee',
+  code: 'REGISTRATION',
+  isPaymentWay: false
+}, {
+  name: 'Monthly fee',
+  code: 'MONTHLY',
+  isPaymentWay: true
+}, {
+  name: 'Semister fee',
+  code: 'SEMISTER',
+  isPaymentWay: true
+}, {
+  name: 'Term fee',
+  code: 'TERM',
+  isPaymentWay: true
+}];
+ipcMain.on(PAYMENT_CRUD_CALLS.checkAndInitializePaymentTypes, async event => {
   try {
-    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(await appPrisma.payment.findMany());
+    const _paymentTypes = await appPrisma.ptype.findMany();
+    if (_paymentTypes.length === 0) {
+      for (const _paymentType of defaultPaymentTypes) {
+        await appPrisma.ptype.create({
+          data: {
+            name: _paymentType.name,
+            code: _paymentType.code,
+            isPaymentWay: _paymentType.isPaymentWay
+          }
+        });
+      }
+      ;
+      event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()({
+        message: `success payment types`
+      });
+    } else {
+      event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(await appPrisma.ptype.findMany());
+    }
   } catch (e) {
-    event.returnValue = e.message;
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()({
+      'Error': e.message
+    });
   } // event.sender.send('prisma-button-response', JSON.stringify(await prisma.user.findMany({})))
 });
 
