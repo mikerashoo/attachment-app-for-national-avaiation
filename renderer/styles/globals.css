@@ -12,4 +12,12 @@
   .btn-blue {
     @apply text-white font-bold px-4 py-2 rounded bg-blue-600 hover:bg-blue-500;
   }
+
+  .txt-primary{
+    @apply text-blue-600
+  }
+
+  .bg-primary {
+    @apply text-white bg-blue-500
+  }
 }

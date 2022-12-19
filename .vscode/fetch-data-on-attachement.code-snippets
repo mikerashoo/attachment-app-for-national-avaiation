@@ -1,0 +1,40 @@
+{
+	// Place your attachment-app workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	"Fetch Data": {
+		"scope": "javascript,typescript",
+		"prefix": "fetchdata",
+		"body": [
+            "const [loading, setLoading] = useState(false)",
+            "const [saving, setSaving] = useState(false)",
+            "const [hasError, setHasError] = useState(false)",
+            "const [$1, $2] = useState([])  ",
+            "const fetch = async ()  => {",
+               "    try {",
+                    "   setHasError(false)",
+                    "   setLoading(true)",
+                    "   const resp = await $3();",
+                    "   if(resp){",
+                    "       $2(resp);",
+                    "       setLoading(false)",
+                    "   }",
+                "}",
+                "   catch(e){ ",
+			    "       console.log(e);", 
+                "       setHasError(true)",
+                "       setLoading(false)",
+                "   }",
+              "}",
+            
+              "useEffect(() => {",
+              "  fetch()",
+              "}, [])",
+		],
+		"description": "Insert page fetching setup"
+	}
+}

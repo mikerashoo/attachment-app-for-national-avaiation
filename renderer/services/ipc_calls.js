@@ -1,11 +1,11 @@
 export const USER_CRUD_CALLS = {
-    getAll: 'get-all-users',
-    create: 'create-user',
+    getAllUsersCall: 'get-all-users',
+    createUserCall: 'create-user',
 }
 
 export const PAYMENT_CRUD_CALLS = {
-    getAllPaymentTypes: 'get-all-payment-types',
-    createPaymentType: 'create-payment-type',
-    checkAndInitializePaymentTypes:'check-and-initialize-payment-types',
-
+    getAllPaymentTypesCall: 'get-all-payment-types',
+    createPaymentTypeCall: 'create-payment-type',
+    checkAndInitializePaymentTypesCall:'check-and-initialize-payment-types',
+    changePaymentTypeStatusCall: 'change-payment-type-status',
 }

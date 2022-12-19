@@ -169,13 +169,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "USER_CRUD_CALLS": () => (/* binding */ USER_CRUD_CALLS)
 /* harmony export */ });
 const USER_CRUD_CALLS = {
-  getAll: 'get-all-users',
-  create: 'create-user'
+  getAllUsersCall: 'get-all-users',
+  createUserCall: 'create-user'
 };
 const PAYMENT_CRUD_CALLS = {
-  getAllPaymentTypes: 'get-all-payment-types',
-  createPaymentType: 'create-payment-type',
-  checkAndInitializePaymentTypes: 'check-and-initialize-payment-types'
+  getAllPaymentTypesCall: 'get-all-payment-types',
+  createPaymentTypeCall: 'create-payment-type',
+  checkAndInitializePaymentTypesCall: 'check-and-initialize-payment-types',
+  changePaymentTypeStatusCall: 'change-payment-type-status'
 };
 
 /***/ }),
@@ -217,12 +218,12 @@ const defaultPaymentTypes = [{
   code: 'TERM',
   isPaymentWay: true
 }];
-ipcMain.on(PAYMENT_CRUD_CALLS.checkAndInitializePaymentTypes, async event => {
+ipcMain.on(PAYMENT_CRUD_CALLS.checkAndInitializePaymentTypesCall, async event => {
   try {
-    const _paymentTypes = await appPrisma.ptype.findMany();
+    const _paymentTypes = await appPrisma.paymentType.findMany();
     if (_paymentTypes.length === 0) {
       for (const _paymentType of defaultPaymentTypes) {
-        await appPrisma.ptype.create({
+        await appPrisma.paymentType.create({
           data: {
             name: _paymentType.name,
             code: _paymentType.code,
@@ -235,7 +236,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.checkAndInitializePaymentTypes, async event => {
         message: `success payment types`
       });
     } else {
-      event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(await appPrisma.ptype.findMany());
+      event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(await appPrisma.paymentType.findMany());
     }
   } catch (e) {
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()({
@@ -244,9 +245,42 @@ ipcMain.on(PAYMENT_CRUD_CALLS.checkAndInitializePaymentTypes, async event => {
   } // event.sender.send('prisma-button-response', JSON.stringify(await prisma.user.findMany({})))
 });
 
-ipcMain.on('create-payment', async (event, arg) => {
+ipcMain.on(PAYMENT_CRUD_CALLS.getAllPaymentTypesCall, async (event, args) => {
   try {
-    const paymentData = JSON.parse(arg);
+    const pTypes = await appPrisma.paymentType.findMany();
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(pTypes);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+
+//Update status of payment types
+ipcMain.on(PAYMENT_CRUD_CALLS.changePaymentTypeStatusCall, async (event, args) => {
+  try {
+    const {
+      id
+    } = args;
+    const currentStatus = await appPrisma.paymentType.findUnique({
+      where: {
+        id: id
+      }
+    });
+    const updatePtype = await appPrisma.paymentType.update({
+      where: {
+        id: id
+      },
+      data: {
+        isActive: !currentStatus.isActive
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(updatePtype);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(PAYMENT_CRUD_CALLS.createPaymentTypeCall, async (event, args) => {
+  try {
+    const paymentData = JSON.parse(args);
     const payment = await appPrisma.payment.create({
       data: {
         name: paymentData.name
@@ -280,14 +314,14 @@ const {
 const {
   default: appPrisma
 } = __webpack_require__(/*! ../my-prisma */ "./main/my-prisma.js");
-ipcMain.on(USER_CRUD_CALLS.getAll, async event => {
+ipcMain.on(USER_CRUD_CALLS.getAllUsersCall, async event => {
   try {
-    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(await appPrisma.departement.findMany({}));
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(await appPrisma.user.findMany({}));
   } catch (e) {
     event.returnValue = e.message;
   }
 });
-ipcMain.on(USER_CRUD_CALLS.create, async (event, arg) => {
+ipcMain.on(USER_CRUD_CALLS.createUserCall, async (event, arg) => {
   try {
     const userData = JSON.parse(arg);
     const user = await appPrisma.user.create({

@@ -1,62 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import Head from 'next/head';
-import Link from 'next/link'; 
-import osApi from '../services/osapi'; 
-import userOperations from '../services/users';
-import { Breadcrumb, Button, Card, DatePicker, Layout, Menu } from 'antd'; 
-import { CalendarOutlined, DollarOutlined, LaptopOutlined, MailOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import ManageMenu from '../components/manage_menus';
-import UsersComponent from '../components/users';
-import PaymentManagement from '../components/payments'; 
+import React, { useEffect } from 'react'; 
+
+import { Layout } from 'antd'; 
 import PageLayout from '../components/layouts/PageLayout';
-const { Header, Content, Sider } = Layout;
-
-const menuKeys = {
-	'user': 'user',
-    'payments': 'payments',
-}
-
-const Home = () => { 
-   
-
-    const topics = ["First topic", "Second topic", "Third topic"];
-  const [contentIndex, setContentIndex] = useState(0);
-  const [selectedKey, setSelectedKey] = useState(menuKeys.user);
-  const changeSelectedKey = (event) => {
-    const key = event.key;
-    setSelectedKey(key);
-    setContentIndex(+key);
-  };
-
-  const myItems = [
-    {
-      key: menuKeys.user,
-      label: "Users",
-      icon: <UserOutlined />,
-
-    },
-    {
-      key: menuKeys.payments,  
-      label: "Payments ",
-      icon: <DollarOutlined />,
-
-    },
-    
-  ]
-
-  function getItem(label, key, icon, children) {
-    return {
-      key,
-      icon,
-      children,
-      label,
-    };
-  } 
-
-  const onMenuItemClick = (item) => {
-	setSelectedKey(item.key);
-  }
+import { checkAndInitializePaymentTypes } from '../services/payment-services';
+const { Content } = Layout; 
  
+const Home = () => { 
+    useEffect(() => {
+        checkForPaymentTypes();
+     }, [])
+     
+     const checkForPaymentTypes = async () => {
+       console.log('Checking for===============')
+       const pays =  await checkAndInitializePaymentTypes();
+       console.log("Pays", pays);
+     }
     return (
    <PageLayout>
 		<Layout className='mx-8 px-8 py-4 h-full my-4'>
