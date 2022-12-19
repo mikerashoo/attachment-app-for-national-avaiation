@@ -6,11 +6,10 @@ import userOperations from '../services/users';
 import { Breadcrumb, Button, Card, DatePicker, Layout, Menu } from 'antd'; 
 import { CalendarOutlined, DollarOutlined, LaptopOutlined, MailOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import ManageMenu from '../components/manage_menus';
-import UsersComponent from '../components/users';
-import PaymentManagement from '../components/payments'; 
+import UsersComponent from '../components/management/users'; 
 import PageLayout from '../components/layouts/PageLayout';
-const { Header, Content, Sider } = Layout;
-
+import PaymentTypeManagement from '../components/management/payment_types';
+const { Header, Content, Sider } = Layout; 
 const menuKeys = {
 	'user': 'user',
     'payments': 'payments',
@@ -43,31 +42,44 @@ const Home = () => {
     },
     
   ]
-
+  const style = {backgroundColor: 'transparent'}
   function getItem(label, key, icon, children) {
     return {
       key,
       icon,
       children,
       label,
+      style
     };
   } 
 
   const onMenuItemClick = (item) => {
-	setSelectedKey(item.key);
+	  setSelectedKey(item.key);
   }
  
     return (
-   <PageLayout>
-		<Layout className='mx-8 px-8 py-4 h-full my-4'>
-			 
-				<Content className='p-4 bg-white ml-2'> 
-					<div>
-						<h1>Home Page</h1>
-					</div>
-				</Content> 
-		</Layout> 
-    </PageLayout>
+    <PageLayout >
+		 
+		 
+			<Sider className='pt-4' id='managementSideBar' width={250} style={{backgroundColor: 'transparent'}}> 
+					<Menu
+					onClick={onMenuItemClick}
+        
+					selectedKeys={[selectedKey]}  
+					style={{
+					width: 250,
+          backgroundColor: 'transparent'
+					}}
+				items={myItems.map(_item => getItem(_item.label, _item.key, _item.icon))}
+				/>
+			</Sider> 
+			<Layout>
+					<Content className='p-4 bg-white ml-2 border-t-4 border-purple-900'> 
+					{selectedKey === menuKeys.user && <UsersComponent />}
+					{selectedKey === menuKeys.payments && <PaymentTypeManagement />}
+					</Content>
+			</Layout>  
+	</PageLayout>
   );
 }
 

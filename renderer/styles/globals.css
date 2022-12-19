@@ -1,10 +1,10 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import '~antd/dist/reset.css';
 @layer base {
   body {
-    /* @apply bg-gray-300 text-white; */
+    @apply bg-gray-100 ;
   }
 }
 

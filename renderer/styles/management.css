@@ -1,0 +1,15 @@
+#managementSideBar .ant-menu >  .ant-menu-item-active,
+.ant-menu> .ant-menu-submenu-active,
+.ant-menu > .ant-menu-item-open,
+.ant-menu> .ant-menu-submenu-open,
+.ant-menu > .ant-menu-item-selected,
+.ant-menu > .ant-menu-submenu-selected {
+  color: rgb(231, 228, 246) !important;
+  background-color: #4a39cc !important;
+}
+
+#managementSideBar .ant-menu > .ant-menu-item:hover,
+.ant-menu > .ant-menu-submenu:hover {
+    background-color: rgb(231, 228, 246) !important;
+  color: #4a39cc !important;
+}

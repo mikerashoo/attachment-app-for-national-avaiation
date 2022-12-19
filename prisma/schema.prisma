@@ -24,3 +24,10 @@ model Departement {
     id   Int    @id @default(autoincrement())
     name String @unique
 }
+
+model Ptype {
+    id   Int    @id @default(autoincrement())
+    name String @unique    
+    code String @unique    
+    isPaymentWay Boolean @default(false)
+}
