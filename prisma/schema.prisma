@@ -16,14 +16,31 @@ model User {
 }
 
 model Departement {
-    id   Int    @id @default(autoincrement())
-    name String @unique
+    id                       Int                       @id @default(autoincrement())
+    name                     String                    @unique
+    totalCreditHour          Int
+    pricePerCreditHour       Decimal
+    departementPaymentPrices DepartementPaymentPrice[]
+    paymentTypeId            Int
+    creditHoursPerPaymentWay Decimal
+    paymentWay               PaymentType               @relation(fields: [paymentTypeId], references: [id])
 }
 
 model PaymentType {
-    id           Int     @id @default(autoincrement())
-    name         String  @unique
-    code         String  @unique
-    isPaymentWay Boolean @default(false)
-    isActive     Boolean @default(true)
+    id                       Int                       @id @default(autoincrement())
+    name                     String                    @unique
+    code                     String                    @unique
+    isPaymentWay             Boolean                   @default(false)
+    isActive                 Boolean                   @default(true)
+    departments              Departement[]
+    departementPaymentPrices DepartementPaymentPrice[]
+}
+
+model DepartementPaymentPrice {
+    id            Int         @id @default(autoincrement())
+    departementId Int
+    paymentTypeId Int
+    price         Decimal
+    departement   Departement @relation(fields: [departementId], references: [id], onDelete: Cascade)
+    paymentType   PaymentType @relation(fields: [paymentTypeId], references: [id])
 }

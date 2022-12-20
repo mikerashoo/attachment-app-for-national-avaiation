@@ -165,6 +165,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "DEPARTEMENT_CRUD_CALLS": () => (/* binding */ DEPARTEMENT_CRUD_CALLS),
 /* harmony export */   "PAYMENT_CRUD_CALLS": () => (/* binding */ PAYMENT_CRUD_CALLS),
 /* harmony export */   "USER_CRUD_CALLS": () => (/* binding */ USER_CRUD_CALLS)
 /* harmony export */ });
@@ -178,6 +179,117 @@ const PAYMENT_CRUD_CALLS = {
   checkAndInitializePaymentTypesCall: 'check-and-initialize-payment-types',
   changePaymentTypeStatusCall: 'change-payment-type-status'
 };
+const DEPARTEMENT_CRUD_CALLS = {
+  getAllDepartementsCall: 'get-all-departements',
+  createDepartementsCall: 'create-departement',
+  deleteDepartementsCall: 'delete-departement'
+};
+
+/***/ }),
+
+/***/ "./main/main-process/departement-controller.js":
+/*!*****************************************************!*\
+  !*** ./main/main-process/departement-controller.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/json/stringify */ "./node_modules/@babel/runtime-corejs3/core-js-stable/json/stringify.js");
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0__);
+
+const {
+  ipcMain
+} = __webpack_require__(/*! electron */ "electron");
+const {
+  default: appPrisma
+} = __webpack_require__(/*! ../my-prisma */ "./main/my-prisma.js");
+const {
+  DEPARTEMENT_CRUD_CALLS
+} = __webpack_require__(/*! ../ipc_calls */ "./main/ipc_calls.js");
+ipcMain.on(DEPARTEMENT_CRUD_CALLS.getAllDepartementsCall, async (event, args) => {
+  try {
+    const departements = await appPrisma.departement.findMany({
+      include: {
+        paymentWay: true,
+        departementPaymentPrices: true
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(departements);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementsCall, async (event, args) => {
+  try {
+    const {
+      name,
+      totalCreditHour,
+      pricePerCreditHour,
+      paymentTypeId,
+      creditHoursPerPaymentWay,
+      registrationPrice
+    } = args;
+    const registrationPayment = await appPrisma.paymentType.findFirst({
+      where: {
+        code: 'REGISTRATION'
+      }
+    });
+    const departement = await appPrisma.departement.create({
+      data: {
+        name,
+        totalCreditHour,
+        pricePerCreditHour,
+        paymentTypeId,
+        creditHoursPerPaymentWay
+      }
+    });
+    const depPayPrice = pricePerCreditHour * creditHoursPerPaymentWay;
+    const depPayment = await appPrisma.departementPaymentPrice.create({
+      data: {
+        paymentTypeId,
+        departementId: departement.id,
+        price: depPayPrice
+      }
+    });
+    const regPayment = await appPrisma.departementPaymentPrice.create({
+      data: {
+        paymentTypeId: registrationPayment.id,
+        departementId: departement.id,
+        price: registrationPrice
+      }
+    });
+    const departementToReturn = await appPrisma.departement.findFirst({
+      where: {
+        id: departement.id
+      },
+      include: {
+        paymentWay: true,
+        departementPaymentPrices: true
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(departementToReturn);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+
+//Delete departement
+ipcMain.on(DEPARTEMENT_CRUD_CALLS.deleteDepartementsCall, async (event, args) => {
+  try {
+    const {
+      id
+    } = args;
+    const deleteDep = await appPrisma.departement.delete({
+      where: {
+        id: id
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(deleteDep);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
 
 /***/ }),
 
@@ -8220,6 +8332,7 @@ function loadMainProcess() {
 }
 __webpack_require__(/*! ./main-process/user-controller */ "./main/main-process/user-controller.js");
 __webpack_require__(/*! ./main-process/payment-controller */ "./main/main-process/payment-controller.js");
+__webpack_require__(/*! ./main-process/departement-controller */ "./main/main-process/departement-controller.js");
 })();
 
 module.exports = __webpack_exports__;

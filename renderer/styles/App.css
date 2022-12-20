@@ -1,5 +1,5 @@
 body{
-    overflow: hidden !important;
+    /* overflow: hidden !important; */
 }
 
 .ant-layout {
@@ -45,3 +45,7 @@ body{
   .menuCon .rightMenu {
     float: right;
   }  
+
+  :where(.css-dev-only-do-not-override-26rdvq).ant-form-vertical .ant-form-item-label, :where(.css-dev-only-do-not-override-26rdvq).ant-col-24.ant-form-item-label, :where(.css-dev-only-do-not-override-26rdvq).ant-col-xl-24.ant-form-item-label {
+    padding: 0 !important;
+  }

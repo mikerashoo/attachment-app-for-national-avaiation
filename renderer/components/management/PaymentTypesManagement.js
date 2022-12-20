@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Card, Col, Divider, message, PageHeader, Radio, Row, Switch, Table } from 'antd';
 import { CustomPageHeader } from '../small_components/page_header';
-import {  changePaymentTypeStatus, getAllPaymentTypes } from '../../services/payment-services';
+import {  changePaymentTypeStatus, getAllPaymentTypes } from '../../services/handlers/payment-handlers';
 import ErrorAlert from '../small_components/error_alert';
 import { GENERAL_ERROR_MESSAGE } from '../utils/error_messages';
 
