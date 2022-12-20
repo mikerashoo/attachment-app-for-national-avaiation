@@ -5,22 +5,23 @@ import UsersComponent from '../components/management/users';
 import PageLayout from '../components/layouts/PageLayout';
 import PaymentTypeManagement from '../components/management/PaymentTypesManagement';
 import DepartementManagement from '../components/management/DepartementManagement';
+import StudentManagement from '../components/management/StudentManagement';
 const { Header, Content, Sider } = Layout; 
 const menuKeys = {
-	'user': 'user',
+	'students': 'students',
     'payments': 'payments',
     'departement': 'departement',
 }
 
 const ManagementPage = () => { 
    
-  const [selectedKey, setSelectedKey] = useState(menuKeys.user);
+  const [selectedKey, setSelectedKey] = useState(menuKeys.students);
    
 
   const myItems = [
     {
-      key: menuKeys.user,
-      label: "Users",
+      key: menuKeys.students,
+      label: "Students",
       icon: <UserOutlined />,
 
     },
@@ -71,7 +72,7 @@ const ManagementPage = () => {
 			<Layout className='w-full'>
 					<Content className='p-4 bg-white ml-2 border-1 w-full'> 
                      
-                        {selectedKey === menuKeys.user && <UsersComponent />}
+                        {selectedKey === menuKeys.students && <StudentManagement />}
                         {selectedKey === menuKeys.payments && <PaymentTypeManagement />}
                         {selectedKey === menuKeys.departement && <DepartementManagement />}
 					</Content>

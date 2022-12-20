@@ -167,6 +167,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "DEPARTEMENT_CRUD_CALLS": () => (/* binding */ DEPARTEMENT_CRUD_CALLS),
 /* harmony export */   "PAYMENT_CRUD_CALLS": () => (/* binding */ PAYMENT_CRUD_CALLS),
+/* harmony export */   "STUDENT_CRUD_CALLS": () => (/* binding */ STUDENT_CRUD_CALLS),
 /* harmony export */   "USER_CRUD_CALLS": () => (/* binding */ USER_CRUD_CALLS)
 /* harmony export */ });
 const USER_CRUD_CALLS = {
@@ -181,8 +182,13 @@ const PAYMENT_CRUD_CALLS = {
 };
 const DEPARTEMENT_CRUD_CALLS = {
   getAllDepartementsCall: 'get-all-departements',
-  createDepartementsCall: 'create-departement',
-  deleteDepartementsCall: 'delete-departement'
+  createDepartementCall: 'create-departement',
+  deleteDepartementCall: 'delete-departement'
+};
+const STUDENT_CRUD_CALLS = {
+  getAllStudentsCall: 'get-all-students',
+  createStudentCall: 'create-student',
+  deleteStudentCall: 'delete-student'
 };
 
 /***/ }),
@@ -220,7 +226,7 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.getAllDepartementsCall, async (event, args) =>
     event.returnValue = e.message;
   }
 });
-ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementsCall, async (event, args) => {
+ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementCall, async (event, args) => {
   try {
     const {
       name,
@@ -275,7 +281,7 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementsCall, async (event, args) =>
 });
 
 //Delete departement
-ipcMain.on(DEPARTEMENT_CRUD_CALLS.deleteDepartementsCall, async (event, args) => {
+ipcMain.on(DEPARTEMENT_CRUD_CALLS.deleteDepartementCall, async (event, args) => {
   try {
     const {
       id
@@ -399,6 +405,69 @@ ipcMain.on(PAYMENT_CRUD_CALLS.createPaymentTypeCall, async (event, args) => {
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(payment);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+
+/***/ }),
+
+/***/ "./main/main-process/student-controller.js":
+/*!*************************************************!*\
+  !*** ./main/main-process/student-controller.js ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/json/stringify */ "./node_modules/@babel/runtime-corejs3/core-js-stable/json/stringify.js");
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ipc_calls__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ipc_calls */ "./main/ipc_calls.js");
+
+const {
+  ipcMain
+} = __webpack_require__(/*! electron */ "electron");
+const {
+  default: appPrisma
+} = __webpack_require__(/*! ../my-prisma */ "./main/my-prisma.js");
+
+ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.getAllStudentsCall, async (event, args) => {
+  try {
+    const students = await appPrisma.student.findMany({
+      include: {
+        departement: true
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(students);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.createStudentCall, async (event, args) => {
+  try {
+    const {
+      name,
+      departementId,
+      registeredAt,
+      collageId
+    } = args;
+    const student = await appPrisma.student.create({
+      data: {
+        name,
+        departementId,
+        registeredAt,
+        collageId
+      }
+    });
+    const studentToReturn = await appPrisma.student.findUnique({
+      where: {
+        id: student.id
+      },
+      include: {
+        departement: true
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(studentToReturn);
   } catch (e) {
     event.returnValue = e.message;
   }
@@ -8333,6 +8402,7 @@ function loadMainProcess() {
 __webpack_require__(/*! ./main-process/user-controller */ "./main/main-process/user-controller.js");
 __webpack_require__(/*! ./main-process/payment-controller */ "./main/main-process/payment-controller.js");
 __webpack_require__(/*! ./main-process/departement-controller */ "./main/main-process/departement-controller.js");
+__webpack_require__(/*! ./main-process/student-controller */ "./main/main-process/student-controller.js");
 })();
 
 module.exports = __webpack_exports__;

@@ -18,7 +18,7 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.getAllDepartementsCall, async (event, args) =>
     }
 })
 
-ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementsCall, async(event, args) => {
+ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementCall, async(event, args) => {
     try{
         const {
             name, 
@@ -79,7 +79,7 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementsCall, async(event, args) => 
 })
 
 //Delete departement
-ipcMain.on(DEPARTEMENT_CRUD_CALLS.deleteDepartementsCall, async (event, args) => {
+ipcMain.on(DEPARTEMENT_CRUD_CALLS.deleteDepartementCall, async (event, args) => {
     try{
         const {id} = args;
         const deleteDep = await appPrisma.departement.delete({
