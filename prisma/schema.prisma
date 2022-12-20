@@ -24,6 +24,8 @@ model Departement {
     paymentTypeId            Int
     creditHoursPerPaymentWay Decimal
     paymentWay               PaymentType               @relation(fields: [paymentTypeId], references: [id])
+    students                 Student[]
+    isActive                 Boolean                   @default(true)
 }
 
 model PaymentType {
@@ -43,4 +45,14 @@ model DepartementPaymentPrice {
     price         Decimal
     departement   Departement @relation(fields: [departementId], references: [id], onDelete: Cascade)
     paymentType   PaymentType @relation(fields: [paymentTypeId], references: [id])
+}
+
+model Student {
+    id            Int         @id @default(autoincrement())
+    name          String
+    collageId     String      @unique
+    departementId Int
+    departement   Departement @relation(fields: [departementId], references: [id], onDelete: Cascade)
+    registeredAt  DateTime    @default(now())
+    isActive      Boolean     @default(true)
 }

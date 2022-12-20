@@ -12,6 +12,12 @@ export const PAYMENT_CRUD_CALLS = {
 
 export const DEPARTEMENT_CRUD_CALLS = {
     getAllDepartementsCall: 'get-all-departements',
-    createDepartementsCall: 'create-departement',
-    deleteDepartementsCall: 'delete-departement',
+    createDepartementCall: 'create-departement',
+    deleteDepartementCall: 'delete-departement',
+}
+
+export const STUDENT_CRUD_CALLS = {
+    getAllStudentsCall: 'get-all-students',
+    createStudentCall: 'create-student',
+    deleteStudentCall: 'delete-student',
 }
