@@ -227,21 +227,38 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementsCall, async (event, args) =>
       pricePerCreditHour,
       paymentTypeId,
       creditHoursPerPaymentWay,
-      registrationPrice,
-      paymentPrice
+      registrationPrice
     } = args;
-    const deprtement = await appPrisma.create({
+    const registrationPayment = await appPrisma.paymentType.findFirst({
+      where: {
+        code: 'REGISTRATION'
+      }
+    });
+    const departement = await appPrisma.departement.create({
       data: {
         name,
         totalCreditHour,
         pricePerCreditHour,
         paymentTypeId,
-        creditHoursPerPaymentWay,
-        registrationPrice,
-        paymentPrice
+        creditHoursPerPaymentWay
       }
     });
-    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(deprtement);
+    const depPayPrice = pricePerCreditHour * creditHoursPerPaymentWay;
+    const depPayment = await appPrisma.departementPaymentPrice.create({
+      data: {
+        paymentTypeId,
+        departementId: departement.id,
+        price: depPayPrice
+      }
+    });
+    const regPayment = await appPrisma.departementPaymentPrice.create({
+      data: {
+        paymentTypeId: registrationPayment.id,
+        departementId: departement.id,
+        price: registrationPrice
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(departement);
   } catch (e) {
     event.returnValue = e.message;
   }
