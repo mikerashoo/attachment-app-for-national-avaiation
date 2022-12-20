@@ -41,6 +41,6 @@ model DepartementPaymentPrice {
     departementId Int
     paymentTypeId Int
     price         Decimal
-    departement   Departement @relation(fields: [departementId], references: [id])
+    departement   Departement @relation(fields: [departementId], references: [id], onDelete: Cascade)
     paymentType   PaymentType @relation(fields: [paymentTypeId], references: [id])
 }

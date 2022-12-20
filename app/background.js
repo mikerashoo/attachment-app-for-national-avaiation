@@ -181,7 +181,8 @@ const PAYMENT_CRUD_CALLS = {
 };
 const DEPARTEMENT_CRUD_CALLS = {
   getAllDepartementsCall: 'get-all-departements',
-  createDepartementsCall: 'create-departements'
+  createDepartementsCall: 'create-departement',
+  deleteDepartementsCall: 'delete-departement'
 };
 
 /***/ }),
@@ -258,15 +259,34 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementsCall, async (event, args) =>
         price: registrationPrice
       }
     });
-    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(departement);
+    const departementToReturn = await appPrisma.departement.findFirst({
+      where: {
+        id: departement.id
+      },
+      include: {
+        paymentWay: true,
+        departementPaymentPrices: true
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(departementToReturn);
   } catch (e) {
     event.returnValue = e.message;
   }
 });
 
-//CREATE CONTROLLER
-ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementsCall, async (event, args) => {
-  try {} catch (e) {
+//Delete departement
+ipcMain.on(DEPARTEMENT_CRUD_CALLS.deleteDepartementsCall, async (event, args) => {
+  try {
+    const {
+      id
+    } = args;
+    const deleteDep = await appPrisma.departement.delete({
+      where: {
+        id: id
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(deleteDep);
+  } catch (e) {
     event.returnValue = e.message;
   }
 });

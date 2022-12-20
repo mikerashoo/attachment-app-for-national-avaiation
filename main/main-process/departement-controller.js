@@ -60,18 +60,32 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementsCall, async(event, args) => 
                 price: registrationPrice
             }
         })
+
+        const departementToReturn = await appPrisma.departement.findFirst({
+            where: {
+                id: departement.id
+            },
+            include: {
+                paymentWay: true,
+                departementPaymentPrices: true, 
+              }, 
+        })
  
-        event.returnValue = JSON.stringify(departement)
+        event.returnValue = JSON.stringify(departementToReturn)
     }
     catch(e){
         event.returnValue = e.message
     }
 })
 
-//CREATE CONTROLLER
-ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementsCall, async (event, args) => {
+//Delete departement
+ipcMain.on(DEPARTEMENT_CRUD_CALLS.deleteDepartementsCall, async (event, args) => {
     try{
-        
+        const {id} = args;
+        const deleteDep = await appPrisma.departement.delete({
+            where: {id: id}
+        })
+        event.returnValue = JSON.stringify(deleteDep)
     }
     catch(e){
         event.returnValue = e.message

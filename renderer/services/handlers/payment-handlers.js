@@ -6,8 +6,7 @@ import responseModifier from "../response_modifier";
 export const checkAndInitializePaymentTypes = async () => {
     try{
         const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.checkAndInitializePaymentTypesCall);
-        
-        return response;
+        return responseModifier(response)
     }catch(e){
         return e;
     }
@@ -19,16 +18,14 @@ export const getAllPaymentTypes = async () => {
     return responseModifier(response)
 }
 
-export const changePaymentTypeStatus = async (data) => {
-    console.log("====================", data)
-    const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.changePaymentTypeStatusCall, data);
-    console.log("Response: ", response);
+export const changePaymentTypeStatus = async (data) => { 
+    const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.changePaymentTypeStatusCall, data); 
     return responseModifier(response)
 }
 
 const createPaymentType = async (data) => {
     const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.createPaymentTypeCall, JSON.stringify(data));
-    return response;
+    return responseModifier(response)
      
 }
 const userOperations = {
