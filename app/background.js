@@ -528,7 +528,11 @@ ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.getAllStud
   try {
     const students = await appPrisma.student.findMany({
       include: {
-        departement: true
+        departement: {
+          include: {
+            departementPaymentPrices: true
+          }
+        }
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(students);

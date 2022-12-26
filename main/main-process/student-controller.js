@@ -6,7 +6,11 @@ ipcMain.on(STUDENT_CRUD_CALLS.getAllStudentsCall, async (event, args) => {
     try{
         const students = await appPrisma.student.findMany({
             include: {
-                departement: true, 
+                departement: {
+                    include: {
+                        departementPaymentPrices: true
+                    }
+                }, 
               }, 
         });
         event.returnValue = JSON.stringify(students)

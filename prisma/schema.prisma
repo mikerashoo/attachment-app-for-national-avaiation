@@ -34,9 +34,9 @@ model PaymentType {
     code                     String                    @unique
     isPaymentWay             Boolean                   @default(false)
     isActive                 Boolean                   @default(true)
-    departments              Departement[]
+    departments              Departement[] 
     departementPaymentPrices DepartementPaymentPrice[]
-    paymentTypePrice PaymentTypePrice[]
+    paymentForm PaymentForm[]
 }
 
 model DepartementPaymentPrice {
@@ -67,19 +67,18 @@ model Payment {
     student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
     attachmentNo String
     checkNo String
-    paymentTypes PaymentTypePrice[]
+    paymentForms PaymentForm[]
     total Decimal
     createdAT DateTime  @default(now())
-}
+} 
 
-model PaymentTypePrice {
+model PaymentForm {
     id            Int         @id @default(autoincrement())
-    paymentId Int
-    payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
     paymentTypeId Int
     paymentType   PaymentType @relation(fields: [paymentTypeId], references: [id], onDelete: Cascade)
-    price Decimal
-    month Int?
+    payments Payment[]
+    monthyear Int?
+    quarterYear Int?
+    semisterYear Int?
     year Int?
 }
-
