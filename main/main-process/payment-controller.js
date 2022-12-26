@@ -1,4 +1,4 @@
-const {ipcMain} = require('electron');
+const {ipcMain, app} = require('electron');
 const { default: appPrisma } = require('../my-prisma');
 const { PAYMENT_CRUD_CALLS } = require('../ipc_calls'); 
 const defaultPaymentTypes = [
@@ -21,6 +21,12 @@ const defaultPaymentTypes = [
         name: 'Term fee',
         code: 'TERM',
         isPaymentWay: true,
+    }
+    ,
+    {
+        name: 'Penality',
+        code: 'PENALITY',
+        isPaymentWay: false,
     }
 ]
 
@@ -90,7 +96,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.changePaymentTypeStatusCall, async (event, args) =
 ipcMain.on(PAYMENT_CRUD_CALLS.createPaymentTypeCall, async (event, args) => {
     try{
          const paymentData = JSON.parse(args); 
-        const payment = await appPrisma.payment.create({
+        const payment = await appPrisma.paymentType.create({
             data: { 
                 name: paymentData.name
             }
@@ -100,6 +106,64 @@ ipcMain.on(PAYMENT_CRUD_CALLS.createPaymentTypeCall, async (event, args) => {
     catch(e){
         event.returnValue = e.message
     }
-   
 
 })
+
+
+ipcMain.on(PAYMENT_CRUD_CALLS.addPaymentCall, async (event, args) => {
+    try{
+        const {title, studentId, attachmentNo, checkNo, total, payments} = args; 
+         
+
+        const payment = await appPrisma.payment.create({
+            data: { 
+                title, studentId, attachmentNo, checkNo, total
+            }
+        });
+        payments.forEach(async (typePrice) => {
+ 
+             await appPrisma.paymentTypePrice.create({
+                data: {
+                    ...typePrice
+                }
+             })
+        });
+
+        const paymentResponse = await appPrisma.payment.findUnique({
+            where: {
+                id: payment.id
+            }
+        })
+        event.returnValue = JSON.stringify(payment)
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+
+})
+
+
+
+// model Payment {
+//     id            Int         @id @default(autoincrement())
+//     title          String
+//     collageId     String      @unique
+//     studentId Int
+//     student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+//     attachmentNo String
+//     checkNo String
+//     paymentTypes PaymentTypePrice[]
+//     total Decimal
+//     createdAT DateTime  @default(now())
+// }
+
+// model PaymentTypePrice {
+//     id            Int         @id @default(autoincrement())
+//     paymentId Int
+//     payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+//     paymentTypeId Int
+//     paymentType   PaymentType @relation(fields: [paymentTypeId], references: [id], onDelete: Cascade)
+//     price Decimal
+//     month Int
+//     year Int 
+// }

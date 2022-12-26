@@ -28,10 +28,40 @@ const createPaymentType = async (data) => {
     return responseModifier(response)
      
 }
+
+export const addPaymentHandler = async () => {
+    const title = "Test payment";
+    const studentId = 1;
+    const attachmentNo = "attachment"
+    const checkNo = "null";
+    const total = 1000;
+    const payments = [
+        {
+            paymentId: 1,
+            paymentTypeId: 1,
+            price: 1000,
+            month: 2,
+            year: 2020,
+        }
+    ]
+         const data =  {title, studentId, attachmentNo, checkNo, total, payments}; 
+         const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.addPaymentCall, data);
+         console.log("**********************", response)
+        return responseModifier(response)
+}
+
+//     paymentId Int
+//     payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+//     paymentTypeId Int
+//     paymentType   PaymentType @relation(fields: [paymentTypeId], references: [id], onDelete: Cascade)
+//     price Decimal
+//     month Int
+//     year Int 
 const userOperations = {
     checkAndInitializePaymentTypes,
     getAllPaymentTypes,
     createPaymentType,
+    addPaymentHandler
 }
 
 export default userOperations;

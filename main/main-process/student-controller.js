@@ -21,7 +21,7 @@ ipcMain.on(STUDENT_CRUD_CALLS.createStudentCall, async (event, args) => {
     try{
         const {name, departementId, registeredAt, collageId } = args;
         const student = await appPrisma.student.create({
-            data: {name, departementId, registeredAt, collageId }
+            data: {name, departementId, registeredAt, collageId, discount: 0 }
         })
 
         const studentToReturn = await appPrisma.student.findUnique({

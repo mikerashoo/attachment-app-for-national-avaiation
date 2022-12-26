@@ -134,11 +134,8 @@ const StudentManagement = () => {
               </Card>
     </Modal>
         <ManagementHeading title={"Students"} actionButtons={ [
-             <button
-             onClick={showModal}
-             type="button"
-             className="inline-flex items-center rounded-md border border-transparent bg-primary px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-         >Add</button>
+                          <Button className='bg-primary' type='primary' onClick={showModal}>Register</Button>
+ 
         ]} /> 
         {hasError && <ErrorAlert className="my-4" />  }
     
