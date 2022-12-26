@@ -23,6 +23,7 @@ export default function Navbar() {
 
                 <div className="hidden md:flex">
                     <NavLink to="/home">New attachement</NavLink>
+                 
                     <NavLink to="/report">
                         Report
                     </NavLink>
@@ -31,7 +32,7 @@ export default function Navbar() {
                     </NavLink>
                 </div>
             </div>
-        </nav>
+        </nav>  
     )
 }
  
