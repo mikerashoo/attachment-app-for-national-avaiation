@@ -5,7 +5,7 @@ import PageLayout from '../components/layouts/PageLayout';
 import { addPaymentHandler, checkAndInitializePaymentTypes } from '../services/handlers/payment-handlers';
 import { getAllStudentsHandler } from '../services/handlers/student-handler';
 import { getAllDepartementsHandler } from '../services/handlers/departement-handler';
-import FormCreate from '../components/payments/form-create';
+import FormCreate from '../components/payments/payment-form-create';
 const { Content } = Layout; 
  
 const formItemLayout = {
@@ -29,7 +29,7 @@ const Home = () => {
     const [form,] = Form.useForm(); 
     
     useEffect(() => { 
-        // checkForPaymentTypes();  
+        checkForPaymentTypes();  
         // fetchStudents(); 
      }, [])
      
@@ -97,7 +97,7 @@ const Home = () => {
 			 
 			<Content className='p-4 bg-white ml-2'> 
 					<Skeleton loading={isPaymentTypeLoading || isStudentsLoading}>
-						<FormCreate />
+						 
 					{/* <div>
 									<h1>New Student</h1>
 						<Form  

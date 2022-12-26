@@ -175,11 +175,14 @@ const USER_CRUD_CALLS = {
   createUserCall: 'create-user'
 };
 const PAYMENT_CRUD_CALLS = {
-  getAllPaymentTypesCall: 'get-all-payment-types',
+  fetchPaymentTypesCall: 'get-all-payment-types',
   createPaymentTypeCall: 'create-payment-type',
   checkAndInitializePaymentTypesCall: 'check-and-initialize-payment-types',
   changePaymentTypeStatusCall: 'change-payment-type-status',
-  addPaymentCall: 'add-payment-call'
+  addPaymentCall: 'add-payment-call',
+  fetchPaymentFormsCall: 'get-all-payment-forms',
+  createPaymentFormCall: 'create-payment-form',
+  fetchPaymentFormDataCall: 'get-payment-form-data'
 };
 const DEPARTEMENT_CRUD_CALLS = {
   getAllDepartementsCall: 'get-all-departements',
@@ -363,13 +366,9 @@ const defaultPaymentTypes = [{
   code: 'SEMISTER',
   isPaymentWay: true
 }, {
-  name: 'Term fee',
-  code: 'TERM',
+  name: 'Quarter fee',
+  code: 'QUARTER',
   isPaymentWay: true
-}, {
-  name: 'Penality',
-  code: 'PENALITY',
-  isPaymentWay: false
 }];
 ipcMain.on(PAYMENT_CRUD_CALLS.checkAndInitializePaymentTypesCall, async event => {
   try {
@@ -398,7 +397,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.checkAndInitializePaymentTypesCall, async event =>
   } // event.sender.send('prisma-button-response', JSON.stringify(await prisma.user.findMany({})))
 });
 
-ipcMain.on(PAYMENT_CRUD_CALLS.getAllPaymentTypesCall, async (event, args) => {
+ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentTypesCall, async (event, args) => {
   try {
     const pTypes = await appPrisma.paymentType.findMany();
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(pTypes);
@@ -478,30 +477,44 @@ ipcMain.on(PAYMENT_CRUD_CALLS.addPaymentCall, async (event, args) => {
     event.returnValue = e.message;
   }
 });
-
-// model Payment {
-//     id            Int         @id @default(autoincrement())
-//     title          String
-//     collageId     String      @unique
-//     studentId Int
-//     student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-//     attachmentNo String
-//     checkNo String
-//     paymentTypes PaymentTypePrice[]
-//     total Decimal
-//     createdAT DateTime  @default(now())
-// }
-
-// model PaymentTypePrice {
-//     id            Int         @id @default(autoincrement())
-//     paymentId Int
-//     payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-//     paymentTypeId Int
-//     paymentType   PaymentType @relation(fields: [paymentTypeId], references: [id], onDelete: Cascade)
-//     price Decimal
-//     month Int
-//     year Int 
-// }
+ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormsCall, async (event, args) => {
+  try {
+    const paymentForms = await appPrisma.paymentForm.findMany();
+    event.returnValue = paymentForms;
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormDataCall, async (event, args) => {
+  try {
+    const paymentForms = await appPrisma.paymentForm.findMany({
+      include: {
+        paymentType: true
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(paymentForms);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(PAYMENT_CRUD_CALLS.createPaymentFormCall, async (event, args) => {
+  try {
+    const newForm = await appPrisma.paymentForm.create({
+      data: _objectSpread({}, args)
+    });
+    const paymentForm = await appPrisma.paymentForm.findUnique({
+      where: {
+        id: newForm.id
+      },
+      include: {
+        paymentType: true
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(paymentForm);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
 
 /***/ }),
 

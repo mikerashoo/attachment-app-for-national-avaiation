@@ -18,16 +18,10 @@ const defaultPaymentTypes = [
         isPaymentWay: true,
     },
     {
-        name: 'Term fee',
-        code: 'TERM',
+        name: 'Quarter fee',
+        code: 'QUARTER',
         isPaymentWay: true,
-    }
-    ,
-    {
-        name: 'Penality',
-        code: 'PENALITY',
-        isPaymentWay: false,
-    }
+    } 
 ]
 
 ipcMain.on(PAYMENT_CRUD_CALLS.checkAndInitializePaymentTypesCall, async (event) => { 
@@ -58,7 +52,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.checkAndInitializePaymentTypesCall, async (event) 
     } // event.sender.send('prisma-button-response', JSON.stringify(await prisma.user.findMany({})))
 })
 
-ipcMain.on(PAYMENT_CRUD_CALLS.getAllPaymentTypesCall, async (event, args) => {
+ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentTypesCall, async (event, args) => {
     try{
         const pTypes = await appPrisma.paymentType.findMany();
         event.returnValue = JSON.stringify(pTypes)
@@ -142,28 +136,49 @@ ipcMain.on(PAYMENT_CRUD_CALLS.addPaymentCall, async (event, args) => {
 
 })
 
+ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormsCall, async (event, args) => {
+    try{
+        const paymentForms = await appPrisma.paymentForm.findMany();
+        event.returnValue = paymentForms
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
 
+ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormDataCall, async (event, args) => {
+    try{
+        
+        const paymentForms = await appPrisma.paymentForm.findMany({
+            include: {
+                paymentType: true
+            }
+        });
 
-// model Payment {
-//     id            Int         @id @default(autoincrement())
-//     title          String
-//     collageId     String      @unique
-//     studentId Int
-//     student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-//     attachmentNo String
-//     checkNo String
-//     paymentTypes PaymentTypePrice[]
-//     total Decimal
-//     createdAT DateTime  @default(now())
-// }
+        event.returnValue = JSON.stringify(paymentForms)
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
+ 
+ipcMain.on(PAYMENT_CRUD_CALLS.createPaymentFormCall, async (event, args) => {
+    try{
+        const newForm = await appPrisma.paymentForm.create({
+            data: {...args}
+        })
+        const paymentForm = await appPrisma.paymentForm.findUnique({
+            where: {
+                id: newForm.id
+            },
+            include: {
+                paymentType: true
+            }
+        });
 
-// model PaymentTypePrice {
-//     id            Int         @id @default(autoincrement())
-//     paymentId Int
-//     payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-//     paymentTypeId Int
-//     paymentType   PaymentType @relation(fields: [paymentTypeId], references: [id], onDelete: Cascade)
-//     price Decimal
-//     month Int
-//     year Int 
-// }
+        event.returnValue = JSON.stringify(paymentForm) 
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})

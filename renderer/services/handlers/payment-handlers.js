@@ -13,8 +13,13 @@ export const checkAndInitializePaymentTypes = async () => {
     
 }
 
-export const getAllPaymentTypes = async () => {
-    const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.getAllPaymentTypesCall);
+export const fetchPaymentTypes = async () => {
+    const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.fetchPaymentTypesCall);
+    return responseModifier(response)
+}
+
+export const fetchPaymentFormsData = async () => {
+    const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.fetchPaymentFormDataCall);
     return responseModifier(response)
 }
 
@@ -50,6 +55,17 @@ export const addPaymentHandler = async () => {
         return responseModifier(response)
 }
 
+export const fetchPaymentForms = async () => {
+    const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.fetchPaymentFormsCall)
+    return response 
+}
+
+export const createPaymentForm = async (data) => {
+    const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.createPaymentFormCall, data)
+    return responseModifier(response)
+
+}
+
 //     paymentId Int
 //     payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 //     paymentTypeId Int
@@ -59,7 +75,7 @@ export const addPaymentHandler = async () => {
 //     year Int 
 const userOperations = {
     checkAndInitializePaymentTypes,
-    getAllPaymentTypes,
+    fetchPaymentTypes,
     createPaymentType,
     addPaymentHandler
 }
