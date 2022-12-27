@@ -29,27 +29,11 @@ const Home = () => {
     const [form,] = Form.useForm(); 
     
     useEffect(() => { 
-        checkForPaymentTypes();  
-        // fetchStudents(); 
+        //TODO CHECK PAYMENTS
+        // checkForPaymentTypes();  
+        fetchStudents(); 
      }, [])
-     
-
-     const checkForPaymentTypes = async () => {
-        try {
-            setIsPaymentTypeLoading(true)
-            const _paymentTypes = await checkAndInitializePaymentTypes(); 
-        
-            
-            if(_paymentTypes){
-              setPaymentTypes(_paymentTypes)
-              setIsPaymentTypeLoading(false)
-            }
-        } catch (error) {
-          console.log(error)
-          setIsPaymentTypeLoading(false)
-          sethasError(true)
-        }
-     }
+      
 
      const fetchStudents = async () => {
       try {
@@ -86,7 +70,7 @@ const Home = () => {
 
      const onStudentSelected = (sId) => {
 		const student = students.find(stu => stu.id === sId);
-		setStudentId(sId)
+		 
 		setStudent(student)
 		console.log(student)	  
      }

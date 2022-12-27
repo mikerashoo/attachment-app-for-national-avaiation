@@ -8,8 +8,6 @@ import { GENERAL_ERROR_MESSAGE } from '../utils/error_messages';
  
 function PaymentTypeManagement() {
 
-
-    console.log('PaymentTypeManagement ***************************************************88')
     const columns = [
         {
             title: 'Payment type',

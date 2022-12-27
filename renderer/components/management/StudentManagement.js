@@ -1,10 +1,11 @@
-import { Popconfirm, Table, Column, Card, Form, Input, Col, Row, Modal, InputNumber, Select, Button, DatePicker, message } from 'antd' 
+import { Popconfirm, Table, Card, Form, Input, Col, Row, Modal, InputNumber, Select, Button, DatePicker, message } from 'antd' 
 import React, { useEffect, useState } from 'react'
 import { createStudentHandler, getAllStudentsHandler } from '../../services/handlers/student-handler'
 import ErrorAlert from '../small_components/error_alert'
 import { CustomPageHeader, HeadingTail, ManagementHeading } from '../small_components/page_header'
 import moment from 'moment/moment'
 import { getAllDepartementsHandler } from '../../services/handlers/departement-handler'
+const {Column} = Table
 
 const formLayout = {
     wrapperCol: {

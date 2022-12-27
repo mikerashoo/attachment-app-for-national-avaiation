@@ -1,13 +1,15 @@
 import React, { Component } from "react"; 
 import { Menu } from "antd"; 
+import Link from "next/link";
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 
 function NavLink({to, children}) {
-    return <a href={to} className={`mx-4`}>
+    return <span className="px-4"><Link href={to} className={`!mx-4`}>
         {children}
-    </a>
+    </Link>
+    </span>
 }
 
 export default function Navbar() { 
