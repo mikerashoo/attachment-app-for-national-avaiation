@@ -182,7 +182,8 @@ const PAYMENT_CRUD_CALLS = {
   addPaymentCall: 'add-payment-call',
   fetchPaymentFormsCall: 'get-all-payment-forms',
   createPaymentFormCall: 'create-payment-form',
-  fetchPaymentFormDataCall: 'get-payment-form-data'
+  fetchPaymentFormDataCall: 'get-payment-form-data',
+  changePaymentFormStateCall: 'change-payment-form-status'
 };
 const DEPARTEMENT_CRUD_CALLS = {
   getAllDepartementsCall: 'get-all-departements',
@@ -490,7 +491,10 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormDataCall, async (event, args) => {
     const paymentForms = await appPrisma.paymentForm.findMany({
       include: {
         paymentType: true
-      }
+      },
+      orderBy: [{
+        id: 'desc'
+      }]
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(paymentForms);
   } catch (e) {
@@ -511,6 +515,28 @@ ipcMain.on(PAYMENT_CRUD_CALLS.createPaymentFormCall, async (event, args) => {
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(paymentForm);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(PAYMENT_CRUD_CALLS.changePaymentFormStateCall, async (event, args) => {
+  try {
+    const {
+      id,
+      status
+    } = args;
+    const updatedForm = await appPrisma.paymentForm.update({
+      where: {
+        id: id
+      },
+      data: {
+        isActive: status
+      },
+      include: {
+        paymentType: true
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(updatedForm);
   } catch (e) {
     event.returnValue = e.message;
   }

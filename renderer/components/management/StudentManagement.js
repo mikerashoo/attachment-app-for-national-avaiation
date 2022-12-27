@@ -98,41 +98,41 @@ const StudentManagement = () => {
     <div>
         <Modal title="Register New Student" open={isModalOpen} footer={null} onOk={handleOk} onCancel={handleCancel}>
         
-        <Card loading={loading} >
-                  <Form  
-                      form={form}
-                      size="middle"
-                      layout="vertical" 
-                      onFinish={onSubmit} 
-                      >
-                      
-                      <Form.Item label="Full Name" name='name' rules={[{required: true}]}>
-                          <Input placeholder="Enter full name here" />
-                      </Form.Item> 
-                      <Form.Item label="ID" name='collageId' rules={[{required: true, message: "Student id can't be empty"}]}>
-                          <Input placeholder="Enter student ID" />
-                      </Form.Item>  
-                      <Form.Item label="Departement" name="departementId" rules={[{required: true, message:"Student departement is required"}]}>
-                            <Select placeholder="Select departement">
-                                
-                                {
-                                    departements.map(departement => <Select.Option value={departement.id}> {
-                                            departement.name
-                                        } </Select.Option>)
-                                }
-                            </Select>
+            <Card loading={loading} >
+                    <Form  
+                        form={form}
+                        size="middle"
+                        layout="vertical" 
+                        onFinish={onSubmit} 
+                        >
+                        
+                        <Form.Item label="Full Name" name='name' rules={[{required: true}]}>
+                            <Input placeholder="Enter full name here" />
+                        </Form.Item> 
+                        <Form.Item label="ID" name='collageId' rules={[{required: true, message: "Student id can't be empty"}]}>
+                            <Input placeholder="Enter student ID" />
+                        </Form.Item>  
+                        <Form.Item label="Departement" name="departementId" rules={[{required: true, message:"Student departement is required"}]}>
+                                <Select placeholder="Select departement">
+                                    
+                                    {
+                                        departements.map(departement => <Select.Option value={departement.id}> {
+                                                departement.name
+                                            } </Select.Option>)
+                                    }
+                                </Select>
+                            </Form.Item>
+                        
+                            <Form.Item label="Registered at" name="registeredAt" required>
+                                <DatePicker  format="YYYY-MM-DD HH:mm:ss"  />
+                            </Form.Item>
+                        
+                        <Form.Item >
+                            <Button className='bg-primary' type='primary' htmlType='submit'>Save</Button>
                         </Form.Item>
-                       
-                        <Form.Item label="Registered at" name="registeredAt" required>
-                            <DatePicker  format="YYYY-MM-DD HH:mm:ss"  />
-                        </Form.Item>
-                      
-                      <Form.Item >
-                          <Button className='bg-primary' type='primary' htmlType='submit'>Save</Button>
-                      </Form.Item>
-                  </Form>
-              </Card>
-    </Modal>
+                    </Form>
+                </Card>
+        </Modal>
         <ManagementHeading title={"Students"} actionButtons={ [
                           <Button className='bg-primary' type='primary' onClick={showModal}>Register</Button>
  
@@ -141,14 +141,13 @@ const StudentManagement = () => {
     
         <Table className="pt-4" pagination={{ pageSize: 5}} rowClassName='group' loading={loading} key="id" bordered size='xs' dataSource={students} >
             
-            <Column title="ID" dataIndex="collageId" key="collageId" render={(collageId, student) => (
-                <>
+            <Column title="ID" dataIndex="collageId" key="collageId" render={(collageId, student) => <>
                 {collageId } 
                 <Popconfirm
                     title={`Are you sure you want to delete student : ${student.name}`}
                     description="Are you sure to delete this student?"
                     okText="Yes delete!"
-                    okButtonProps={{classNames: "!bg-danger", danger: true}}
+                    okButtonProps={{classnames: "!bg-danger", danger: true}}
                     placement="topRight"
                     cancelText="Cancel"
                     onConfirm={() => deleteStudent(student.id)}
@@ -157,12 +156,12 @@ const StudentManagement = () => {
                     </Popconfirm>
                     
                 </> 
-                )}/>
+                }/>
             <Column title="Full Name" dataIndex="name" key="name" />
             <Column title="Departement" dataIndex="departement" key="departement" render={departement => departement.name } />
             <Column title="Registered at" dataIndex="registeredAt" key="registeredAt" render={registeredAt => <> { moment(registeredAt).format("D/MM/YYYY") } </>}/>
 
-            <Column title="Status" dataIndex="isActive" key="isActive" render={(isActive, student) => isActive ? <p className='text-green-500'>Active</p> : <p className='text-red-500'>Inactive</p>} />
+            <Column title="Status" dataIndex="isActive" key="isActive" render={(isActive, student) => <> {isActive ? <p className='text-green-500'>Active</p> : <p className='text-red-500'>Inactive</p>}</>} />
               
         </Table>
         

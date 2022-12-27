@@ -87,6 +87,7 @@ model PaymentForm {
     payments      Payment[]
     formPayments  PaymentFormPayment[]
     isActive      Boolean              @default(true)
+    createdAT     DateTime             @default(now())
 }
 
 model PaymentFormPayment {

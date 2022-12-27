@@ -152,7 +152,12 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormDataCall, async (event, args) => {
         const paymentForms = await appPrisma.paymentForm.findMany({
             include: {
                 paymentType: true
-            }
+            },
+            orderBy: [
+                {
+                    id: 'desc',
+                }
+            ]
         });
 
         event.returnValue = JSON.stringify(paymentForms)
@@ -177,6 +182,27 @@ ipcMain.on(PAYMENT_CRUD_CALLS.createPaymentFormCall, async (event, args) => {
         });
 
         event.returnValue = JSON.stringify(paymentForm) 
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
+
+ipcMain.on(PAYMENT_CRUD_CALLS.changePaymentFormStateCall, async (event, args) => {
+    try{
+        const {id, status} = args
+        const updatedForm = await appPrisma.paymentForm.update({
+            where: {
+                id: id
+            },
+            data: {
+                isActive: status
+            },
+            include: {
+                paymentType: true
+            }
+        })
+        event.returnValue = JSON.stringify(updatedForm) 
     }
     catch(e){
         event.returnValue = e.message

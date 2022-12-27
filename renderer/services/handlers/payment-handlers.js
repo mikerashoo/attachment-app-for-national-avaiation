@@ -63,16 +63,13 @@ export const fetchPaymentForms = async () => {
 export const createPaymentForm = async (data) => {
     const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.createPaymentFormCall, data)
     return responseModifier(response)
-
 }
 
-//     paymentId Int
-//     payment   Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-//     paymentTypeId Int
-//     paymentType   PaymentType @relation(fields: [paymentTypeId], references: [id], onDelete: Cascade)
-//     price Decimal
-//     month Int
-//     year Int 
+export const updatePaymentFormStatus = async (data) => {
+    const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.changePaymentFormStateCall, data)
+    console.log(response)
+    return responseModifier(response)
+}
 const userOperations = {
     checkAndInitializePaymentTypes,
     fetchPaymentTypes,
