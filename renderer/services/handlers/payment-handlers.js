@@ -70,6 +70,20 @@ export const updatePaymentFormStatus = async (data) => {
     console.log(response)
     return responseModifier(response)
 }
+
+export const fetchPaymentFormsForDepartement = async (data) => {
+    const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.fetchPaymentFormsForDepartementCall, data)
+    console.log(response)
+    return responseModifier(response)
+}
+
+export const savePaymentHandler = async (data) => {
+    const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.savePaymentCall, data)
+    console.log(response)
+    return responseModifier(response)
+}
+
+
 const userOperations = {
     checkAndInitializePaymentTypes,
     fetchPaymentTypes,

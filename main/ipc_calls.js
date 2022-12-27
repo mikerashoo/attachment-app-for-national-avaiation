@@ -12,7 +12,9 @@ export const PAYMENT_CRUD_CALLS = {
     fetchPaymentFormsCall: 'get-all-payment-forms',
     createPaymentFormCall: 'create-payment-form',
     fetchPaymentFormDataCall: 'get-payment-form-data',
-    changePaymentFormStateCall: 'change-payment-form-status'
+    changePaymentFormStateCall: 'change-payment-form-status',
+    fetchPaymentFormsForDepartementCall: 'fetch-payment-forms-for-departement',
+    savePaymentCall: 'save-payment'
 }
 
 export const DEPARTEMENT_CRUD_CALLS = {

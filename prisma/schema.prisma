@@ -67,8 +67,8 @@ model Payment {
     student      Student              @relation(fields: [studentId], references: [id], onDelete: Cascade)
     attachmentNo String
     paymentWay   String               @default("BANK")
-    checkNo      String
-    penalty      Decimal?
+    checkNo      String?
+    penality     Decimal?
     total        Decimal
     createdAT    DateTime             @default(now())
     paymentForms PaymentForm[]
