@@ -1,7 +1,2 @@
-- db schema 
-- ipcall constants
-- controllers
-- add controller to server
-- add page
-- fetch 
-- create 
+- check payment types are added on app start
+- change description and title of popovers

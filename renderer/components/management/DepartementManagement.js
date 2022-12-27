@@ -1,7 +1,7 @@
 import { Col, Modal, Table, Row, Card, Form, Radio, Input, Button, InputNumber, Select, message, Popconfirm } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { createNewDepartementHandler, deleteDepartementHandler, getAllDepartementsHandler } from '../../services/handlers/departement-handler'
-import { getAllPaymentTypes } from '../../services/handlers/payment-handlers'
+import { fetchPaymentTypes } from '../../services/handlers/payment-handlers'
 import ErrorAlert from '../small_components/error_alert'
 import { CustomPageHeader } from '../small_components/page_header'
 import { DeleteOutlined } from '@ant-design/icons';
@@ -38,7 +38,7 @@ function DepartementManagement() {
             setLoading(true)
             const resp = await getAllDepartementsHandler(); 
           
-            const _paymentTypes = await getAllPaymentTypes();
+            const _paymentTypes = await fetchPaymentTypes();
             if(_paymentTypes && resp){
                 setDepartements(resp); 
                 setPaymentTypes(_paymentTypes);

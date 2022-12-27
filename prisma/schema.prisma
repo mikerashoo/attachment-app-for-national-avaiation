@@ -36,6 +36,7 @@ model PaymentType {
     isActive                 Boolean                   @default(true)
     departments              Departement[]
     departementPaymentPrices DepartementPaymentPrice[]
+    paymentForm              PaymentForm[]
 }
 
 model DepartementPaymentPrice {
@@ -54,5 +55,46 @@ model Student {
     departementId Int
     departement   Departement @relation(fields: [departementId], references: [id], onDelete: Cascade)
     registeredAt  DateTime    @default(now())
+    discount      Int?
+    payments      Payment[]
     isActive      Boolean     @default(true)
+}
+
+model Payment {
+    id           Int                  @id @default(autoincrement())
+    title        String
+    studentId    Int
+    student      Student              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+    attachmentNo String
+    paymentWay   String               @default("BANK")
+    checkNo      String
+    penalty      Decimal?
+    total        Decimal
+    createdAT    DateTime             @default(now())
+    paymentForms PaymentForm[]
+    formPayments PaymentFormPayment[]
+}
+
+model PaymentForm {
+    id            Int                  @id @default(autoincrement())
+    title         String
+    paymentTypeId Int
+    paymentType   PaymentType          @relation(fields: [paymentTypeId], references: [id], onDelete: Cascade)
+    month         Int?
+    quarter       Int?
+    semister      Int?
+    year          Int?
+    payments      Payment[]
+    formPayments  PaymentFormPayment[]
+    isActive      Boolean              @default(true)
+    createdAT     DateTime             @default(now())
+}
+
+model PaymentFormPayment {
+    id            Int         @id @default(autoincrement())
+    paymentFormId Int
+    paymentForm   PaymentForm @relation(fields: [paymentFormId], references: [id], onDelete: Cascade)
+    paymentId     Int
+    payment       Payment     @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+    price         Decimal
 }

@@ -1,15 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { Card, Col, Divider, message, PageHeader, Radio, Row, Switch, Table } from 'antd';
 import { CustomPageHeader } from '../small_components/page_header';
-import {  changePaymentTypeStatus, getAllPaymentTypes } from '../../services/handlers/payment-handlers';
+import {  changePaymentTypeStatus, fetchPaymentTypes } from '../../services/handlers/payment-handlers';
 import ErrorAlert from '../small_components/error_alert';
 import { GENERAL_ERROR_MESSAGE } from '../utils/error_messages';
 
  
 function PaymentTypeManagement() {
 
-
-    console.log('PaymentTypeManagement ***************************************************88')
     const columns = [
         {
             title: 'Payment type',
@@ -35,7 +33,7 @@ function PaymentTypeManagement() {
     try {
         setHasError(false)
         setLoading(true)
-        const _paymentTypes = await getAllPaymentTypes();
+        const _paymentTypes = await fetchPaymentTypes();
         if(_paymentTypes){
             setPaymentTypes(_paymentTypes);
             setLoading(false)

@@ -4,10 +4,15 @@ export const USER_CRUD_CALLS = {
 }
 
 export const PAYMENT_CRUD_CALLS = {
-    getAllPaymentTypesCall: 'get-all-payment-types',
+    fetchPaymentTypesCall: 'get-all-payment-types',
     createPaymentTypeCall: 'create-payment-type',
     checkAndInitializePaymentTypesCall:'check-and-initialize-payment-types',
     changePaymentTypeStatusCall: 'change-payment-type-status',
+    addPaymentCall: 'add-payment-call',
+    fetchPaymentFormsCall: 'get-all-payment-forms',
+    createPaymentFormCall: 'create-payment-form',
+    fetchPaymentFormDataCall: 'get-payment-form-data',
+    changePaymentFormStateCall: 'change-payment-form-status'
 }
 
 export const DEPARTEMENT_CRUD_CALLS = {

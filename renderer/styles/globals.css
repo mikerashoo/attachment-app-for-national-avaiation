@@ -13,17 +13,29 @@
     @apply text-white font-bold px-4 py-2 rounded bg-blue-600 hover:bg-blue-500;
   }
 
+  .txt-success{
+    @apply !text-green-600
+  }
   .txt-primary{
     @apply text-indigo-600
   }
   .txt-danger{
     @apply text-red-600
   }
+  .txt-warning{
+    @apply text-orange-600
+  }
 
+  .bg-success {
+    @apply !text-white !bg-green-500
+  }
   .bg-primary {
-    @apply text-white bg-indigo-500
+    @apply !text-white !bg-indigo-500
   }
   .bg-danger {
     @apply text-white bg-red-500
+  }
+  .bg-warning {
+    @apply text-white bg-orange-500
   }
 }

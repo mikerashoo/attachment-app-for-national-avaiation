@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react'; 
 import {Layout, Menu } from 'antd'; 
-import { UserOutlined, DollarOutlined, BookOutlined } from '@ant-design/icons'; 
+import { UserOutlined, DollarOutlined, BookOutlined, AlignRightOutlined } from '@ant-design/icons'; 
 import UsersComponent from '../components/management/users'; 
 import PageLayout from '../components/layouts/PageLayout';
 import PaymentTypeManagement from '../components/management/PaymentTypesManagement';
 import DepartementManagement from '../components/management/DepartementManagement';
 import StudentManagement from '../components/management/StudentManagement';
+import PaymentFormManagement from '../components/management/PaymentFormManagement';
 const { Header, Content, Sider } = Layout; 
 const menuKeys = {
 	'students': 'students',
     'payments': 'payments',
     'departement': 'departement',
+    'paymentForms': 'paymentForms',
 }
 
 const ManagementPage = () => { 
@@ -35,6 +37,11 @@ const ManagementPage = () => {
         key: menuKeys.departement,  
         label: "Departement ",
         icon: <BookOutlined />,
+  
+      },  {
+        key: menuKeys.paymentForms,  
+        label: "Payment Forms ",
+        icon: <AlignRightOutlined />,
   
       },
       
@@ -75,6 +82,7 @@ const ManagementPage = () => {
                         {selectedKey === menuKeys.students && <StudentManagement />}
                         {selectedKey === menuKeys.payments && <PaymentTypeManagement />}
                         {selectedKey === menuKeys.departement && <DepartementManagement />}
+                        {selectedKey === menuKeys.paymentForms && <PaymentFormManagement />}
 					</Content>
 			</Layout>  
 	</PageLayout>

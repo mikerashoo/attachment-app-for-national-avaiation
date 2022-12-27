@@ -1,13 +1,15 @@
 import React, { Component } from "react"; 
 import { Menu } from "antd"; 
+import Link from "next/link";
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 
 function NavLink({to, children}) {
-    return <a href={to} className={`mx-4`}>
+    return <span className="px-4"><Link href={to} className={`!mx-4`}>
         {children}
-    </a>
+    </Link>
+    </span>
 }
 
 export default function Navbar() { 
@@ -23,6 +25,7 @@ export default function Navbar() {
 
                 <div className="hidden md:flex">
                     <NavLink to="/home">New attachement</NavLink>
+                 
                     <NavLink to="/report">
                         Report
                     </NavLink>
@@ -31,7 +34,7 @@ export default function Navbar() {
                     </NavLink>
                 </div>
             </div>
-        </nav>
+        </nav>  
     )
 }
  
