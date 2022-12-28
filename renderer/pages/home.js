@@ -33,15 +33,14 @@ function Home() {
   return (
 	<div className='mx-8 my-4 bg-white h-full px-8 py-4'>
 		<ManagementHeading title="Recent Payments" /> 
-		<Table className="pt-4" pagination={{ pageSize: 10}} rowClassName='group' loading={isLoading} key={"id"} bordered size='xs' dataSource={payments} >
-            
-             
+		<Table rowKey="id" className="pt-4" pagination={{ pageSize: 10}} rowClassName='group' loading={isLoading} key={"id"} bordered size='xs' dataSource={payments} >
             <Column title="Title" dataIndex="title" key="title" />
             <ColumnGroup title="Student">
                 <Column title="ID" dataIndex="student" key="studentId" render={(student) => <>{student.collageId}</>}/>
                 <Column title="Name" dataIndex="student" key="studentName" render={(student) => <>{student.name}</>}/> 
 			</ColumnGroup>
             <Column title="Attachment No" dataIndex="attachmentNo" key="attachmentNo" />
+            <Column title="Payment way" dataIndex="paymentWay" key="paymentWay" />
             <Column title="Total payment" dataIndex="total" key="total" />
             <Column title="Saved at" dataIndex="createdAT" key="createdAT" render={createdAT => <> { moment(createdAT).format("D/MM/YYYY") } </>}/>
 

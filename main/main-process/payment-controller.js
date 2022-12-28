@@ -327,9 +327,29 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
                 id: paymentId
             },
             include: {
-                formPayments: true,
-                student: {
-                    departement
+                formPayments: {
+                     
+                    include: { 
+                        paymentForm: {
+                            select: {
+                        paymentType: true,
+
+                                title: true
+                            }
+                        }
+                    }
+                },
+                student: {                    
+                    
+                    select: {
+                        name: true,
+                        collageId: true,
+                        departement: {
+                            include: {
+                                departementPaymentPrices: true
+                            }
+                        }
+                    }
                 }
             },
         })
