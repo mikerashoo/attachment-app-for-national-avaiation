@@ -33,17 +33,21 @@ const PrintPreview = () => {
     fetch()
   }, [])
 
-  return (<Skeleton loading={isLoading} className="p-8">
-    <Card className='m-8'>
-        <div className='text-end'>
-            <p>{moment().format('DD-MM-YYYY')}</p>
+  return (
+  <div className='px-8'>
+  <Skeleton loading={isLoading} className="px-8">
+    <Card className='m-8 mx-16'>
+        <div className='text-end mb-4'>
+            <p className='text-l'>Date : {moment().format('DD-MM-YYYY')}</p>
+            <p className='text-l'>NO : {payment.id >= 10000 ? payment.id : `00${payment.id}`  }</p>
         </div>
     {
-        payment.title &&  <h1 className='text-center text-lg'>{payment.title}</h1>
+        payment.title &&  <p className='text-center text-2xl border-b-2'>{payment.title}</p>
     }
     </Card>
     
-    </Skeleton>)
+    </Skeleton>
+    </div>)
 }
 
 export default PrintPreview 

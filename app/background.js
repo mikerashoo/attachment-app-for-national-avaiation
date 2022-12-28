@@ -679,7 +679,9 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
       },
       include: {
         formPayments: true,
-        student: true
+        student: {
+          departement
+        }
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(payment);

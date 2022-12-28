@@ -328,7 +328,9 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
             },
             include: {
                 formPayments: true,
-                student: true
+                student: {
+                    departement
+                }
             },
         })
         event.returnValue = JSON.stringify(payment) ;
