@@ -8,6 +8,7 @@ import { app, ipcMain } from 'electron';
 import serve from 'electron-serve';
 
 import { createWindow } from './helpers';
+import appPrisma from './my-prisma';
 export const latestMigration = "20221217183943_payment_table_added";
 const dbPath = isDev ? join(__dirname, './prisma/dev.db') : path.join(app.getPath("userData"), "database.db")
 
@@ -37,7 +38,7 @@ if (isProd) {
 
 (async () => {  
   await app.whenReady();
-    
+  await checkPaymentTypeIsSetted();
   const mainWindow = createWindow('main', {
     width: 1000,
     height: 600,
@@ -73,6 +74,51 @@ function loadMainProcess() {
     const files = glob.sync(path.join(__dirname, 'main-process/**/*.js'));
     files.forEach((file) => require(file));
   } 
+
+  async function checkPaymentTypeIsSetted  () {
+    try {
+      const defaultPaymentTypes = [
+        {
+            name: 'Registration fee',
+            code: 'REGISTRATION',
+            isPaymentWay: false,
+        },
+        {
+            name: 'Monthly fee',
+            code: 'MONTHLY',
+            isPaymentWay: true,
+        },
+        {
+            name: 'Semister fee',
+            code: 'SEMISTER',
+            isPaymentWay: true,
+        },
+        {
+            name: 'Quarter fee',
+            code: 'QUARTER',
+            isPaymentWay: true,
+        } 
+    ]
+      const _paymentTypes = await appPrisma.paymentType.findMany();
+       
+    if(_paymentTypes.length === 0){
+        for(const _paymentType of defaultPaymentTypes) {
+            await appPrisma.paymentType.create({
+                data: {
+                    name: _paymentType.name,
+                    code: _paymentType.code,
+                    isPaymentWay: _paymentType.isPaymentWay,
+                }
+
+            })
+        };
+    }
+        
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
 
 require('./main-process/user-controller')
 require('./main-process/payment-controller')

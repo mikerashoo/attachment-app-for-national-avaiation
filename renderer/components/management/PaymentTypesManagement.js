@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Card, Col, Divider, message, PageHeader, Radio, Row, Switch, Table } from 'antd';
-import { CustomPageHeader } from '../small_components/page_header';
+import { CustomPageHeader, ManagementHeading } from '../small_components/page_header';
 import {  changePaymentTypeStatus, fetchPaymentTypes } from '../../services/handlers/payment-handlers';
 import ErrorAlert from '../small_components/error_alert';
 import { GENERAL_ERROR_MESSAGE } from '../utils/error_messages';
@@ -73,13 +73,8 @@ function PaymentTypeManagement() {
 
   return (
     <div>
-        <Row>
-            <Col span={12}>
-              <CustomPageHeader title="Payment Types"/>
-            </Col>
-            <Col span={12}></Col>
-        </Row>
-        <Divider className="bg-primary w-full" />
+         
+         <ManagementHeading title="Payment Types"/>
 
        {hasError && <ErrorAlert className="my-4" />  }
        <Table loading={loading} key="id" columns={columns} bordered size='sm' dataSource={paymentTypes} />

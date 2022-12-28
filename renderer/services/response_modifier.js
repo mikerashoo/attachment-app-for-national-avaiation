@@ -1,8 +1,11 @@
 const responseModifier = response => {
     try{ 
-        console.log("response : ", response);
+    console.log(response)
+
+        const jsonResponse = JSON.parse(response);
+        console.log("jsonResponse : ", jsonResponse);
         
-        return JSON.parse(response);
+        return jsonResponse;
     }catch(e){
         throw e;
     }

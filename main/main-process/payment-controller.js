@@ -147,7 +147,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormsCall, async (event, args) => {
 })
 
 ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormDataCall, async (event, args) => {
-    try{
+    try{ 
         
         const paymentForms = await appPrisma.paymentForm.findMany({
             include: {
@@ -247,15 +247,15 @@ ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
     try{
         const {title, studentId, attachmentNo, paymentWay, checkNo, penality, total, selectedPaymentForms} = args;
         const payment = await appPrisma.payment.create({
-            data: {title, studentId, attachmentNo, paymentWay, checkNo, penality, total}
+            data: {title: title, studentId: parseInt(studentId), attachmentNo, paymentWay, checkNo, penality: penality, total}
         })
-
-   
-
+ 
+        //GET STUDENT 
         const student = await appPrisma.student.findUnique({
             where: {id: studentId}
         })
 
+        //GET DEPARTEMENT WITH PAYMENTS
         const departement = await appPrisma.departement.findUnique({
             where: {id: student.departementId},
             include: {
@@ -263,8 +263,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
             }
         })
 
-
-
+        //FOREACH PAYMENT FORMS MAP IT WITH DEPARTEMENT PAYMENTS
         for(const paymentFormId of selectedPaymentForms){ 
             const paymentForm = await appPrisma.paymentForm.findUnique({
                 where: {
@@ -279,7 +278,6 @@ ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
                     price: depPayment.price
                 }
             })
-
         }
 
         const paymentResponse = await appPrisma.payment.findUnique({
@@ -293,6 +291,47 @@ ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
 
         event.returnValue = JSON.stringify(paymentResponse) 
          
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
+
+
+ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentsCall, async (event, args) => {
+    try{
+        const payments = await appPrisma.payment.findMany({
+            include: {
+                formPayments: true,
+                student: true
+            },
+            orderBy: [
+                {
+                    id: 'desc',
+                }
+            ]
+        })
+        event.returnValue = JSON.stringify(payments) 
+
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
+
+ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
+    const paymentId = parseInt(args.id)
+    try{
+        const payment = await appPrisma.payment.findUnique({
+            where: {
+                id: paymentId
+            },
+            include: {
+                formPayments: true,
+                student: true
+            },
+        })
+        event.returnValue = JSON.stringify(payment) ;
     }
     catch(e){
         event.returnValue = e.message

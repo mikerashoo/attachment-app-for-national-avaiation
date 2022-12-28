@@ -1,4 +1,4 @@
-import { Popconfirm, Table, Card, Form, Input, Col, Row, Modal, InputNumber, Select, Button, DatePicker, message } from 'antd' 
+import { Popconfirm, Table, Card, Form, Input, Col, Row, Modal, InputNumber, Select, Button, DatePicker, message, Checkbox } from 'antd' 
 import React, { useEffect, useState } from 'react'
 import { createStudentHandler, getAllStudentsHandler } from '../../services/handlers/student-handler'
 import ErrorAlert from '../small_components/error_alert'
@@ -23,6 +23,7 @@ const StudentManagement = () => {
 
     const [form,] = Form.useForm(); 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [hasDiscount, setHasDiscount] = useState(false);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -94,10 +95,15 @@ const StudentManagement = () => {
     }
 
 
+	  const onHasDiscount = ({ target: { checked } }) => {
+		setHasDiscount(checked);
+	  }
+
+
   return (
     
     <div>
-        <Modal title="Register New Student" open={isModalOpen} footer={null} onOk={handleOk} onCancel={handleCancel}>
+        <Modal title="Register New Student" open={isModalOpen} footer={null} onOk={handleOk} onCancel={handleCancel} destroyOnClose={true}>
         
             <Card loading={loading} >
                     <Form  
@@ -114,20 +120,25 @@ const StudentManagement = () => {
                             <Input placeholder="Enter student ID" />
                         </Form.Item>  
                         <Form.Item label="Departement" name="departementId" rules={[{required: true, message:"Student departement is required"}]}>
-                                <Select placeholder="Select departement">
-                                    
-                                    {
-                                        departements.map(departement => <Select.Option value={departement.id}> {
-                                                departement.name
-                                            } </Select.Option>)
-                                    }
-                                </Select>
-                            </Form.Item>
+                            <Select placeholder="Select departement">
+                                
+                                {
+                                    departements.map(departement => <Select.Option key={departement.id} value={departement.id}> {
+                                            departement.name
+                                        } </Select.Option>)
+                                }
+                            </Select>
+                        </Form.Item>
                         
-                            <Form.Item label="Registered at" name="registeredAt" required>
-                                <DatePicker  format="YYYY-MM-DD HH:mm:ss"  />
-                            </Form.Item>
+                        <Form.Item label="Registered at" name="registeredAt" required>
+                            <DatePicker  format="YYYY-MM-DD HH:mm:ss"  />
+                        </Form.Item>
+                    
+                        <Checkbox name="hasPenality" onChange={onHasDiscount} value={hasDiscount} className='mb-2'> Has Penality</Checkbox> 
                         
+                        {hasDiscount && <Form.Item label="Discount" name="discount" className='w-full' rules={[{required: true}]} >
+                            <InputNumber placeholder="0"  prefix={"%"}/>
+                        </Form.Item> }
                         <Form.Item >
                             <Button className='bg-primary' type='primary' htmlType='submit'>Save</Button>
                         </Form.Item>
@@ -163,6 +174,7 @@ const StudentManagement = () => {
             <Column title="Registered at" dataIndex="registeredAt" key="registeredAt" render={registeredAt => <> { moment(registeredAt).format("D/MM/YYYY") } </>}/>
 
             <Column title="Status" dataIndex="isActive" key="isActive" render={(isActive, student) => <> {isActive ? <p className='text-green-500'>Active</p> : <p className='text-red-500'>Inactive</p>}</>} />
+            <Column title="Discount" dataIndex="discount" key="discount" render={(discount, student) => <> {discount ? <p className='text-primary'>{discount}%</p> : <p className='text-red-500'>-</p>}</>} />
               
         </Table>
         

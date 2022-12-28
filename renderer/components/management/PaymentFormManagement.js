@@ -53,7 +53,7 @@ function PaymentFormManagement() {
         const _paymentForms = [...paymentForms, newForm]
         setPaymentForms(_paymentForms)
         message.success("New form added successfully")
-        handleOk()
+        handleCancel()
     }
 
     const onStatusChange = async (id, status) => {
@@ -79,7 +79,7 @@ function PaymentFormManagement() {
   return (
     <div>
         
-        <Modal title="Add new payment form" open={isModalOpen} footer={null} onOk={handleOk} onCancel={handleCancel}>
+        <Modal title="Add new payment form" open={isModalOpen} footer={null} onOk={handleOk} onCancel={handleCancel} destroyOnClose={true}>
         <PaymentFormCreate onNewForm={onNewForm}/>
         
         </Modal>
