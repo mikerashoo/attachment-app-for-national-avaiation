@@ -228,11 +228,9 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormsForDepartementCall, async (event,
         }
 
         const paymentForms = await appPrisma.paymentForm.findMany({
-            include: {
-                paymentType: true
-            },
+            
             where: {
-                id: { in: pTypes },
+                paymentTypeId: { in: pTypes },
             },
         })
         event.returnValue = JSON.stringify(paymentForms) 

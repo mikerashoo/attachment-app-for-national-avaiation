@@ -27,8 +27,8 @@ export default function Navbar() {
                     <NavLink to="/home">Home</NavLink>
                     <NavLink to="/attachment">New attachement</NavLink>
                  
-                    <NavLink to="/report">
-                        Report
+                    <NavLink to="/reports">
+                        Reports
                     </NavLink>
                     <NavLink to="/manage">
                         Managements
