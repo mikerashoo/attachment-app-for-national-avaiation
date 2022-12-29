@@ -1,5 +1,5 @@
 import { Alert, Space } from "antd";
-import { GENERAL_ERROR_MESSAGE } from "../utils/error_messages";
+import { GENERAL_ERROR_MESSAGE } from "../../utils/error_messages";
 
 const ErrorAlert = ({message = GENERAL_ERROR_MESSAGE}) => 
     <Space direction="vertical" style={{ width: '100%' }} className="my-2"> 

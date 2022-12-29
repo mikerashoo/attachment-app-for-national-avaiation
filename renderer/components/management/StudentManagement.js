@@ -31,10 +31,14 @@ const StudentManagement = () => {
     
       const handleOk = () => {
         setIsModalOpen(false);
+        form.resetFields();
+        setHasDiscount(false) 
       };
     
       const handleCancel = () => {
         setIsModalOpen(false);
+        form.resetFields();
+        setHasDiscount(false) 
       }; 
 
     const fetch = async ()  => {
@@ -81,7 +85,7 @@ const StudentManagement = () => {
             setTimeout(function() {
                 setLoading(false)
                 message.success("Student information saved successfully")
-                form.resetFields()
+                 
                 handleOk()
             }, 1000);
             
@@ -103,7 +107,7 @@ const StudentManagement = () => {
   return (
     
     <div>
-        <Modal title="Register New Student" open={isModalOpen} footer={null} onOk={handleOk} onCancel={handleCancel} destroyOnClose={true}>
+        <Modal title="Register New Student" open={isModalOpen}   footer={null} onOk={handleOk} onCancel={handleCancel} destroyOnClose={true}>
         
             <Card loading={loading} >
                     <Form  
@@ -134,10 +138,11 @@ const StudentManagement = () => {
                             <DatePicker  format="YYYY-MM-DD HH:mm:ss"  />
                         </Form.Item>
                     
-                        <Checkbox name="hasPenality" onChange={onHasDiscount} value={hasDiscount} className='mb-2'> Has Penality</Checkbox> 
+              
+                        <Checkbox name="hasPenality" onChange={onHasDiscount} value={hasDiscount} className='mb-2'> Has Discount</Checkbox> 
                         
-                        {hasDiscount && <Form.Item label="Discount" name="discount" className='w-full' rules={[{required: true}]} >
-                            <InputNumber placeholder="0"  prefix={"%"}/>
+                        {hasDiscount && <Form.Item label="Discount" name="discount" className='w-full' rules={[{required: true}, {type: 'number', max: 100, min: 1}]} >
+                            <InputNumber prefix={"%"}/>
                         </Form.Item> }
                         <Form.Item >
                             <Button className='bg-primary' type='primary' htmlType='submit'>Save</Button>

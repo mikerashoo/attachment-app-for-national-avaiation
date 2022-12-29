@@ -29,4 +29,7 @@ export const STUDENT_CRUD_CALLS = {
     getAllStudentsCall: 'get-all-students',
     createStudentCall: 'create-student',
     deleteStudentCall: 'delete-student',
+    getStudentsWithLessData: 'get-students-with-less-data',
+    searchStudentsById: 'search-students-by-id',
+    getStudentPaymentFormInformation: 'get-student-payment-form-information',
 }

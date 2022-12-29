@@ -4,10 +4,11 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { ManagementHeading } from '../../components/small_components/page_header'
-import companyInformations from '../../components/utils/company_information'
+import companyInformations from '../../utils/company_information'
 import { getPaymentDetailHandler } from '../../services/handlers/payment-handlers'
 import logo from '../../imgs/logo.png'
 import ErrorAlert from '../../components/small_components/error_alert'
+import { generatePaymentNo } from '../../utils/helpers'
 
 const {Column} = Table;
 const PrintPreview = () => {
@@ -49,8 +50,8 @@ const PrintPreview = () => {
 
         payment && <Card className='my-2 px-8 text-center'>
         <div className='text-end mb-2'>
-            <p className='text-l'>Date : {moment().format('DD-MM-YYYY')}</p>
-            
+            <p className='text-l'>Date : {moment(payment.createdAt).format('DD-MM-YYYY')}</p>
+            <p className='text-l'>No : {generatePaymentNo(payment.id)}</p>
         </div>
         <div className='mb-4'>
             <Image src={logo} width="50" height="50" />
@@ -143,11 +144,12 @@ const PrintPreview = () => {
             <Column title="Price/unit" dataIndex="paymentForm" key="paymentFormTitle"  render={(paymentForm, pForm) => {
                     if(!paymentForm.paymentType.isPaymentWay){
                         return <>{pForm.price}</>
-                    }    
-                    return <>{payment.student.departement.pricePerCreditHour}</>
+                    }     
+            
+                    return <>{payment.student.departement.pricePerCreditHour}  </>
                 }
                 } />
-            <Column title="Total" dataIndex="paymentForm" key="paymentFormTitle" render={(paymentForm, pForm) => <>{pForm.price}</>} />
+            <Column title="Total" dataIndex="paymentForm" key="paymentFormTitle" render={(paymentForm, pForm) => <>{pForm.price} {paymentForm.paymentType.isPaymentWay && payment.student.discount != null && payment.student.discount > 0 && <> ({payment.student.discount}% discount) </>}</>} />
              
         </Table>
         

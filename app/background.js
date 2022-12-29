@@ -197,7 +197,10 @@ const DEPARTEMENT_CRUD_CALLS = {
 const STUDENT_CRUD_CALLS = {
   getAllStudentsCall: 'get-all-students',
   createStudentCall: 'create-student',
-  deleteStudentCall: 'delete-student'
+  deleteStudentCall: 'delete-student',
+  getStudentsWithLessData: 'get-students-with-less-data',
+  searchStudentsById: 'search-students-by-id',
+  getStudentPaymentFormInformation: 'get-student-payment-form-information'
 };
 
 /***/ }),
@@ -573,6 +576,9 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormsForDepartementCall, async (event,
         paymentTypeId: {
           in: pTypes
         }
+      },
+      include: {
+        paymentType: true
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(paymentForms);
@@ -627,14 +633,23 @@ ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
       const paymentForm = await appPrisma.paymentForm.findUnique({
         where: {
           id: paymentFormId
+        },
+        include: {
+          paymentType: true
         }
       });
       const depPayment = _babel_runtime_corejs3_core_js_stable_instance_find__WEBPACK_IMPORTED_MODULE_11___default()(_context = departement.departementPaymentPrices).call(_context, dP => dP.paymentTypeId === paymentForm.paymentTypeId);
+      let price = depPayment.price;
+      if (student.discount != null && student.discount > 0 && paymentForm.paymentType.isPaymentWay) {
+        let discountAmount = 100 - _babel_runtime_corejs3_core_js_stable_parse_int__WEBPACK_IMPORTED_MODULE_10___default()(student.discount);
+        let percentMultiplier = discountAmount / 100;
+        price = price * percentMultiplier;
+      }
       await appPrisma.paymentFormPayment.create({
         data: {
           paymentFormId: paymentForm.id,
           paymentId: payment.id,
-          price: depPayment.price
+          price: price
         }
       });
     }
@@ -689,6 +704,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
           select: {
             name: true,
             collageId: true,
+            discount: true,
             departement: {
               include: {
                 departementPaymentPrices: true
@@ -703,30 +719,6 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
     event.returnValue = e.message;
   }
 });
-
-// model Payment {
-//     id           Int                  @id @default(autoincrement())
-//     title        String
-//     studentId    Int
-//     student      Student              @relation(fields: [studentId], references: [id], onDelete: Cascade)
-//     attachmentNo String
-//     paymentWay   String               @default("BANK")
-//     checkNo      String
-//     penalty      Decimal?
-//     total        Decimal
-//     createdAT    DateTime             @default(now())
-//     paymentForms PaymentForm[]
-//     formPayments PaymentFormPayment[]
-// }
-
-// model PaymentFormPayment {
-//     id            Int         @id @default(autoincrement())
-//     paymentFormId Int
-//     paymentForm   PaymentForm @relation(fields: [paymentFormId], references: [id], onDelete: Cascade)
-//     paymentId     Int
-//     payment       Payment     @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-//     price         Decimal
-// }
 
 /***/ }),
 
@@ -792,6 +784,120 @@ ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.createStud
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(studentToReturn);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.getStudentsWithLessData, async (event, args) => {
+  try {
+    const students = await appPrisma.student.findMany({
+      select: {
+        id: true,
+        name: true,
+        departementId: true,
+        collageId: true,
+        discount: true,
+        departement: {
+          select: {
+            departementPaymentPrices: true
+          }
+        }
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(students);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.searchStudentsById, async (event, args) => {
+  try {
+    const students = await appPrisma.student.findMany({
+      where: {
+        collageId: {
+          startsWith: args.searchId
+        }
+      },
+      select: {
+        id: true,
+        name: true,
+        departementId: true,
+        collageId: true,
+        discount: true,
+        departement: {
+          select: {
+            departementPaymentPrices: true
+          }
+        }
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(students);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.getStudentPaymentFormInformation, async (event, args) => {
+  try {
+    const student = await appPrisma.student.findUnique({
+      where: {
+        id: args.studentId
+      },
+      select: {
+        id: true,
+        name: true,
+        departementId: true,
+        collageId: true,
+        discount: true,
+        departement: {
+          select: {
+            departementPaymentPrices: true
+          }
+        },
+        payments: {
+          select: {
+            formPayments: {
+              include: {
+                paymentForm: {
+                  select: {
+                    id: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+    const pTypes = [];
+    for (const p of student.departement.departementPaymentPrices) {
+      pTypes.push(p.paymentTypeId);
+    }
+    const existingFormIds = [];
+    const existingFormPayments = [];
+    // event.returnValue = JSON.stringify(student.payments)
+
+    for (const _payment of student.payments) {
+      existingFormPayments.push(_payment.formPayments);
+    }
+    for (const _existingForm of existingFormPayments) {
+      for (const _formIn of _existingForm) {
+        existingFormIds.push(_formIn.paymentFormId);
+      }
+    }
+    const paymentForms = await appPrisma.paymentForm.findMany({
+      where: {
+        paymentTypeId: {
+          in: pTypes
+        },
+        id: {
+          notIn: existingFormIds
+        }
+      },
+      include: {
+        paymentType: true
+      }
+    });
+    student.paymentForms = paymentForms;
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(student);
   } catch (e) {
     event.returnValue = e.message;
   }
