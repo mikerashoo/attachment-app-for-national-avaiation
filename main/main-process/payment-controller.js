@@ -128,7 +128,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.addPaymentCall, async (event, args) => {
                 id: payment.id
             }
         })
-        event.returnValue = JSON.stringify(payment)
+        event.returnValue = JSON.stringify(paymentResponse)
     }
     catch(e){
         event.returnValue = e.message
@@ -147,7 +147,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormsCall, async (event, args) => {
 })
 
 ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormDataCall, async (event, args) => {
-    try{
+    try{ 
         
         const paymentForms = await appPrisma.paymentForm.findMany({
             include: {
@@ -208,3 +208,180 @@ ipcMain.on(PAYMENT_CRUD_CALLS.changePaymentFormStateCall, async (event, args) =>
         event.returnValue = e.message
     }
 })
+ 
+
+ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormsForDepartementCall, async (event, args) => {
+    try{
+        const {id} = args
+        const departement = await appPrisma.departement.findUnique({
+            where: {
+                id
+            },
+            include: {
+                departementPaymentPrices: true
+            }
+        })
+
+        const pTypes= [];
+        for(const p of departement.departementPaymentPrices){
+            pTypes.push(p.paymentTypeId)
+        }
+
+        const paymentForms = await appPrisma.paymentForm.findMany({
+            include: {
+                paymentType: true
+            },
+            where: {
+                id: { in: pTypes },
+            },
+        })
+        event.returnValue = JSON.stringify(paymentForms) 
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
+ 
+ 
+ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
+    try{
+        const {title, studentId, attachmentNo, paymentWay, checkNo, penality, total, selectedPaymentForms} = args;
+        const payment = await appPrisma.payment.create({
+            data: {title: title, studentId: parseInt(studentId), attachmentNo, paymentWay, checkNo, penality: penality, total}
+        })
+ 
+        //GET STUDENT 
+        const student = await appPrisma.student.findUnique({
+            where: {id: studentId}
+        })
+
+        //GET DEPARTEMENT WITH PAYMENTS
+        const departement = await appPrisma.departement.findUnique({
+            where: {id: student.departementId},
+            include: {
+                departementPaymentPrices: true
+            }
+        })
+
+        //FOREACH PAYMENT FORMS MAP IT WITH DEPARTEMENT PAYMENTS
+        for(const paymentFormId of selectedPaymentForms){ 
+            const paymentForm = await appPrisma.paymentForm.findUnique({
+                where: {
+                    id: paymentFormId
+                }
+            })
+            const depPayment = departement.departementPaymentPrices.find(dP => dP.paymentTypeId === paymentForm.paymentTypeId);
+            await appPrisma.paymentFormPayment.create({
+                data: {
+                    paymentFormId: paymentForm.id,
+                    paymentId: payment.id,
+                    price: depPayment.price
+                }
+            })
+        }
+
+        const paymentResponse = await appPrisma.payment.findUnique({
+            where: {
+                id: payment.id
+            },
+            include: {
+                formPayments: true
+            }
+        })
+
+        event.returnValue = JSON.stringify(paymentResponse) 
+         
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
+
+
+ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentsCall, async (event, args) => {
+    try{
+        const payments = await appPrisma.payment.findMany({
+            include: {
+                formPayments: true,
+                student: true
+            },
+            orderBy: [
+                {
+                    id: 'desc',
+                }
+            ]
+        })
+        event.returnValue = JSON.stringify(payments) 
+
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
+
+ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
+    const paymentId = parseInt(args.id)
+    try{
+        const payment = await appPrisma.payment.findUnique({
+            where: {
+                id: paymentId
+            },
+            include: {
+                formPayments: {
+                     
+                    include: { 
+                        paymentForm: {
+                            select: {
+                        paymentType: true,
+
+                                title: true
+                            }
+                        }
+                    }
+                },
+                student: {                    
+                    
+                    select: {
+                        name: true,
+                        collageId: true,
+                        departement: {
+                            include: {
+                                departementPaymentPrices: true
+                            }
+                        }
+                    }
+                }
+            },
+        })
+        event.returnValue = JSON.stringify(payment) ;
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
+
+
+// model Payment {
+//     id           Int                  @id @default(autoincrement())
+//     title        String
+//     studentId    Int
+//     student      Student              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+//     attachmentNo String
+//     paymentWay   String               @default("BANK")
+//     checkNo      String
+//     penalty      Decimal?
+//     total        Decimal
+//     createdAT    DateTime             @default(now())
+//     paymentForms PaymentForm[]
+//     formPayments PaymentFormPayment[]
+// }
+
+
+// model PaymentFormPayment {
+//     id            Int         @id @default(autoincrement())
+//     paymentFormId Int
+//     paymentForm   PaymentForm @relation(fields: [paymentFormId], references: [id], onDelete: Cascade)
+//     paymentId     Int
+//     payment       Payment     @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+//     price         Decimal
+// }

@@ -20,7 +20,13 @@ const ManagementPage = () => {
   const [selectedKey, setSelectedKey] = useState(menuKeys.students);
    
 
-  const myItems = [
+  const myItems = [ 
+    {
+        key: menuKeys.departement,  
+        label: "Departement ",
+        icon: <BookOutlined />,
+  
+      },
     {
       key: menuKeys.students,
       label: "Students",
@@ -29,16 +35,11 @@ const ManagementPage = () => {
     },
     {
       key: menuKeys.payments,  
-      label: "Payments ",
+      label: "Payments types ",
       icon: <DollarOutlined />,
 
     },
-    {
-        key: menuKeys.departement,  
-        label: "Departement ",
-        icon: <BookOutlined />,
-  
-      },  {
+     {
         key: menuKeys.paymentForms,  
         label: "Payment Forms ",
         icon: <AlignRightOutlined />,

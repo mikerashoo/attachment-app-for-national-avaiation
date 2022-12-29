@@ -110,7 +110,7 @@ function DepartementManagement() {
     }
   return (
     <div>
-          <Modal title="Add new departement information" open={isModalOpen} footer={null} onOk={handleOk} onCancel={handleCancel}>
+          <Modal title="Add new departement information" open={isModalOpen} footer={null} onOk={handleOk} onCancel={handleCancel} destroyOnClose={true}>
         
           <Card loading={loading} >
                     <Form  
