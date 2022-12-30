@@ -2,7 +2,7 @@ import { Col, Form, Input, Button, Select, DatePicker, Card, Row } from 'antd'
 import moment from 'moment';
 import React, {useState, useEffect} from 'react'
 import { createPaymentForm, createPaymentForms, fetchPaymentTypes } from '../../services/handlers/payment-handlers';
-import payment_type_codes, { PaymentTypeCodes } from '../utils/payment_type_codes';
+import payment_type_codes, { PaymentTypeCodes } from '../../utils/payment_type_codes';
 // import moment from 'moment';
 function PaymentFormCreate({onNewForm}) {
     const [form] = Form.useForm(); 

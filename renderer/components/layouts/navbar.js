@@ -6,7 +6,7 @@ const MenuItemGroup = Menu.ItemGroup;
 
 
 function NavLink({to, children}) {
-    return <span className="px-4"><Link href={to} className={`!mx-4`}>
+    return <span className="px-4 hover:bg-indigo-800"><Link href={to} className="">
         {children}
     </Link>
     </span>
@@ -14,7 +14,7 @@ function NavLink({to, children}) {
 
 export default function Navbar() { 
     return (
-        <nav className="flex filter drop-shadow-sm bg-white px-4 py-4 h-10 items-center">
+        <nav className="flex filter drop-shadow-sm bg-primary px-4 py-4 h-10 items-center">
             
             <div className="w-3/12 flex items-center">
                 <a className="text-2xl font-semibold" href="/home">NACA</a>
@@ -27,8 +27,8 @@ export default function Navbar() {
                     <NavLink to="/home">Home</NavLink>
                     <NavLink to="/attachment">New attachement</NavLink>
                  
-                    <NavLink to="/report">
-                        Report
+                    <NavLink to="/reports">
+                        Reports
                     </NavLink>
                     <NavLink to="/manage">
                         Managements

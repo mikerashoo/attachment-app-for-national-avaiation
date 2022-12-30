@@ -228,12 +228,13 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormsForDepartementCall, async (event,
         }
 
         const paymentForms = await appPrisma.paymentForm.findMany({
+            
+            where: {
+                paymentTypeId: { in: pTypes },
+            },
             include: {
                 paymentType: true
-            },
-            where: {
-                id: { in: pTypes },
-            },
+            }
         })
         event.returnValue = JSON.stringify(paymentForms) 
     }
@@ -268,14 +269,24 @@ ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
             const paymentForm = await appPrisma.paymentForm.findUnique({
                 where: {
                     id: paymentFormId
+                },
+                include: {
+                    paymentType: true
                 }
             })
             const depPayment = departement.departementPaymentPrices.find(dP => dP.paymentTypeId === paymentForm.paymentTypeId);
+            let price = depPayment.price;
+            if(student.discount != null && student.discount > 0 && paymentForm.paymentType.isPaymentWay) {
+               
+                let discountAmount = 100 - parseInt(student.discount);
+                let percentMultiplier = discountAmount / 100;
+                price = price * percentMultiplier;  
+              }
             await appPrisma.paymentFormPayment.create({
                 data: {
                     paymentFormId: paymentForm.id,
                     paymentId: payment.id,
-                    price: depPayment.price
+                    price: price
                 }
             })
         }
@@ -332,8 +343,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
                     include: { 
                         paymentForm: {
                             select: {
-                        paymentType: true,
-
+                                paymentType: true,
                                 title: true
                             }
                         }
@@ -344,6 +354,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
                     select: {
                         name: true,
                         collageId: true,
+                        discount: true,
                         departement: {
                             include: {
                                 departementPaymentPrices: true
@@ -359,29 +370,4 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
         event.returnValue = e.message
     }
 })
-
-
-// model Payment {
-//     id           Int                  @id @default(autoincrement())
-//     title        String
-//     studentId    Int
-//     student      Student              @relation(fields: [studentId], references: [id], onDelete: Cascade)
-//     attachmentNo String
-//     paymentWay   String               @default("BANK")
-//     checkNo      String
-//     penalty      Decimal?
-//     total        Decimal
-//     createdAT    DateTime             @default(now())
-//     paymentForms PaymentForm[]
-//     formPayments PaymentFormPayment[]
-// }
-
-
-// model PaymentFormPayment {
-//     id            Int         @id @default(autoincrement())
-//     paymentFormId Int
-//     paymentForm   PaymentForm @relation(fields: [paymentFormId], references: [id], onDelete: Cascade)
-//     paymentId     Int
-//     payment       Payment     @relation(fields: [paymentId], references: [id], onDelete: Cascade)
-//     price         Decimal
-// }
+ 

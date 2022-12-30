@@ -3,7 +3,7 @@ import { Card, Col, Divider, message, PageHeader, Radio, Row, Switch, Table } fr
 import { CustomPageHeader, ManagementHeading } from '../small_components/page_header';
 import {  changePaymentTypeStatus, fetchPaymentTypes } from '../../services/handlers/payment-handlers';
 import ErrorAlert from '../small_components/error_alert';
-import { GENERAL_ERROR_MESSAGE } from '../utils/error_messages';
+import { GENERAL_ERROR_MESSAGE } from '../../utils/error_messages';
 
  
 function PaymentTypeManagement() {
@@ -77,7 +77,7 @@ function PaymentTypeManagement() {
          <ManagementHeading title="Payment Types"/>
 
        {hasError && <ErrorAlert className="my-4" />  }
-       <Table loading={loading} key="id" columns={columns} bordered size='sm' dataSource={paymentTypes} />
+       <Table loading={loading} key="id" rowKey="id" columns={columns} bordered size='sm' dataSource={paymentTypes} />
     </div>
   )
 }

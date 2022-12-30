@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import PageLayout from '../layouts/PageLayout'
 import PaymentFormCreate from '../payments/payment-form-create'
 import { fetchPaymentForms, fetchPaymentFormsData, fetchPaymentTypes, updatePaymentFormStatus } from '../../services/handlers/payment-handlers'
-import { ManagementHeading } from '../small_components/page_header'
+import { ManagementHeading } from '../small_components/page_header' 
 import ErrorAlert from '../small_components/error_alert'
 
 const {Column} = Table
