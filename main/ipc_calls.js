@@ -33,3 +33,7 @@ export const STUDENT_CRUD_CALLS = {
     searchStudentsById: 'search-students-by-id',
     getStudentPaymentFormInformation: 'get-student-payment-form-information',
 }
+
+export const EXPORT_IMPORT_CALLS = {
+    exportDbCalls: 'export-db-calls',
+}
