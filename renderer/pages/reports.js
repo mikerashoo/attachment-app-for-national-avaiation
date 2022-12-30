@@ -7,6 +7,7 @@ import { ManagementHeading } from '../components/small_components/page_header'
 import { fetchPaymentsHandler } from '../services/handlers/payment-handlers'
 import { generatePaymentNo } from '../utils/helpers'
 const { Column, ColumnGroup } = Table
+import * as XLSX from 'xlsx';
 function Home() {
 	const router = useRouter()
 
@@ -37,9 +38,41 @@ function Home() {
 		const path = `/print/${id}`
 		router.push(path)
 	}
+
+    const downloadExcel = () => {
+        const fileName = 'payment reports ' + moment().format('DD-MM-YYYY') + '.xlsx'
+        const data = [];
+        for (const _payment of payments) {
+             let _row = {
+                print_no: generatePaymentNo(_payment.id),
+                title: _payment.title,
+                studentId: _payment.student.collageId,
+                name: _payment.student.name,
+                attachment: _payment.attachmentNo,
+                paymentWay: _payment.paymentWay,
+                total: _payment.total,
+                date: moment(_payment.createdAT).format("D/MM/YYYY"),
+             }
+             data.push(_row)
+        }
+        let headings = ['Print No', 'Payment title' ,'Student Id', 'Student Name', 'Attachment No', 'Payment way', 'Payed', 'Date']
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.sheet_add_aoa(worksheet, [headings]);
+        XLSX.utils.sheet_add_json(worksheet, data, { origin: 'A2', skipHeader: true });
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+        //let buffer = XLSX.write(workbook, { bookType: "xlsx", type: "buffer" });
+        //XLSX.write(workbook, { bookType: "xlsx", type: "binary" });
+        const isSaved = XLSX.writeFile(workbook, fileName);
+        console.log("----------------------------------------------------");
+        console.log(isSaved);
+      };
   return (
 	<div className='mx-8 my-4 bg-white h-full px-8 py-4'>
-		<ManagementHeading title="Recent Payments" /> 
+		<ManagementHeading title="Recent Payments" actionButtons={[
+            <Button className="bg-primary" onClick={()=>downloadExcel()}>Export</Button>
+        ]}/> 
+       
 		<Table rowKey="id" className="pt-4" pagination={{ pageSize: 10}} rowClassName='group' loading={isLoading} key={"id"} bordered size='xs' dataSource={payments} >
             <Column title="Payment No" dataIndex="id" key="id" render={(id) => <>{generatePaymentNo(id)} </> } />
             <Column title="Title" dataIndex="title" key="title" />

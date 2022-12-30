@@ -19,7 +19,8 @@
     "electron-serve": "^1.1.0",
     "electron-store": "^8.1.0",
     "moment": "^2.29.4",
-    "react-to-print": "^2.14.10"
+    "react-to-print": "^2.14.10",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.7",
