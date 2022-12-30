@@ -41,14 +41,15 @@ const PrintComponent = React.forwardRef((props, ref) => {
   }, [])
  
   return (
-  <div className='px-8' ref={ref}>
+  <div className='px-8'>
   <Skeleton loading={isLoading} className="px-8 h-full">
   {hasError && <ErrorAlert className="my-4" />  }
     <div className='px-16 mx-16'>
+        <h1>Not in print</h1>
     {
 
 
-        payment && <Card className='my-2 px-8 text-center'>
+        payment && <Card className='my-2 px-8 text-center' ref={ref}>
         <div className='text-end mb-2'>
             <p className='text-l'>Date : {moment(payment.createdAt).format('DD-MM-YYYY')}</p>
             <p className='text-l'>No : {generatePaymentNo(payment.id)}</p>
@@ -172,15 +173,17 @@ const PrintComponent = React.forwardRef((props, ref) => {
                  
             </Row>
         <Divider />
-        <div className=" grid grid-cols-5 gap-4">
+        <div className=" grid grid-cols-4 gap-4">
                 <div className="text-sm font-bold"> {companyInformations.name}</div>
-                
                 <div className="text-sm font-bold "> {companyInformations.phoneNumbers.map(phone => <div key={phone} className="">{phone}</div>)}</div>
                 <div className="text-sm font-bold"> {companyInformations.email}</div>
-                <div className="text-sm font-bold "> {companyInformations.website}</div>
                 <div className="text-sm font-bold"> {companyInformations.address}</div>
+
         </div>
-        
+        <div className="text-center">
+            <div className="text-sm font-bold "> {companyInformations.website}</div>
+
+        </div>
         
     
         </Card>
