@@ -153,7 +153,8 @@ ipcMain.on(STUDENT_CRUD_CALLS.getStudentPaymentFormInformation, async (event, ar
             
             where: {
                 paymentTypeId: { in: pTypes },
-                id: {notIn: existingFormIds}
+                id: {notIn: existingFormIds},
+                isActive: true
             },
             include: {
                 paymentType: true

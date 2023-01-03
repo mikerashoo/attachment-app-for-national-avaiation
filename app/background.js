@@ -166,6 +166,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "DEPARTEMENT_CRUD_CALLS": () => (/* binding */ DEPARTEMENT_CRUD_CALLS),
+/* harmony export */   "EXPORT_IMPORT_CALLS": () => (/* binding */ EXPORT_IMPORT_CALLS),
 /* harmony export */   "PAYMENT_CRUD_CALLS": () => (/* binding */ PAYMENT_CRUD_CALLS),
 /* harmony export */   "STUDENT_CRUD_CALLS": () => (/* binding */ STUDENT_CRUD_CALLS),
 /* harmony export */   "USER_CRUD_CALLS": () => (/* binding */ USER_CRUD_CALLS)
@@ -187,7 +188,9 @@ const PAYMENT_CRUD_CALLS = {
   fetchPaymentFormsForDepartementCall: 'fetch-payment-forms-for-departement',
   savePaymentCall: 'save-payment',
   fetchPaymentsCall: 'get-all-payments',
-  getPaymentDetailsCall: 'get-payment-details'
+  getPaymentDetailsCall: 'get-payment-details',
+  getMonthlyPaymentResports: 'get-monthly-payment-resports',
+  getStudentPaymentReports: 'get-student-payment-resports'
 };
 const DEPARTEMENT_CRUD_CALLS = {
   getAllDepartementsCall: 'get-all-departements',
@@ -201,6 +204,10 @@ const STUDENT_CRUD_CALLS = {
   getStudentsWithLessData: 'get-students-with-less-data',
   searchStudentsById: 'search-students-by-id',
   getStudentPaymentFormInformation: 'get-student-payment-form-information'
+};
+const EXPORT_IMPORT_CALLS = {
+  exportDbCalls: 'export-db-calls',
+  importDbCalls: 'import-db-calls'
 };
 
 /***/ }),
@@ -307,6 +314,85 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.deleteDepartementCall, async (event, args) => 
   } catch (e) {
     event.returnValue = e.message;
   }
+});
+
+/***/ }),
+
+/***/ "./main/main-process/export-import-controller.js":
+/*!*******************************************************!*\
+  !*** ./main/main-process/export-import-controller.js ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! electron */ "electron");
+/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ipc_calls__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ipc_calls */ "./main/ipc_calls.js");
+const {
+  join
+} = __webpack_require__(/*! path */ "path");
+const isDev = __webpack_require__(/*! electron-is-dev */ "electron-is-dev");
+const initSqlJs = __webpack_require__(/*! sql.js */ "sql.js");
+var fs = __webpack_require__(/*! fs */ "fs");
+const path = __webpack_require__(/*! path */ "path");
+
+
+const dbFilePath = isDev ? './prisma/dev.db' : path.join(electron__WEBPACK_IMPORTED_MODULE_0__.app.getPath("userData"), "database.db");
+electron__WEBPACK_IMPORTED_MODULE_0__.ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.EXPORT_IMPORT_CALLS.exportDbCalls, async (event, args) => {
+  const filebuffer = fs.readFileSync(dbFilePath);
+  initSqlJs().then(function (SQL) {
+    // Load the db
+
+    const db = new SQL.Database(filebuffer);
+    const data = db.export();
+    const buffer = Buffer.from(data);
+    electron__WEBPACK_IMPORTED_MODULE_0__.dialog.showSaveDialog({
+      title: 'Select the File Path to save',
+      defaultPath: 'test-db-export.db',
+      // defaultPath: path.join(__dirname, '../assets/'),
+      buttonLabel: 'Save',
+      // Restricting the user to only Text Files.
+      filters: [{
+        name: 'sqlite',
+        extensions: ['db']
+      }],
+      properties: []
+    }).then(file => {
+      // Stating whether dialog operation was cancelled or not.
+      console.log(file.canceled);
+      if (!file.canceled) {
+        console.log(file.filePath.toString());
+        fs.writeFileSync(file.filePath.toString(), buffer);
+      }
+    }).catch(err => {
+      console.log(err);
+    });
+  });
+});
+electron__WEBPACK_IMPORTED_MODULE_0__.ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.EXPORT_IMPORT_CALLS.importDbCalls, async (event, args) => {
+  electron__WEBPACK_IMPORTED_MODULE_0__.dialog.showOpenDialog(fileNames => {
+    // fileNames is an array that contains all the selected
+    if (fileNames === undefined) {
+      console.log("No file selected");
+      return;
+    }
+  }).then(file => {
+    if (!file.canceled) {
+      const filebuffer = fs.readFileSync(file.filePaths[0].toString());
+      initSqlJs().then(function (SQL) {
+        // Load the db
+
+        const db = new SQL.Database(filebuffer);
+        const data = db.export();
+        const buffer = Buffer.from(data);
+        fs.writeFileSync(dbFilePath, buffer);
+      });
+      // fs.writeFileSync(file.filePath.toString(), buffer);
+    }
+  }).catch(err => {
+    console.log(err);
+  });
 });
 
 /***/ }),
@@ -719,6 +805,102 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
     event.returnValue = e.message;
   }
 });
+ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentsCall, async (event, args) => {
+  try {
+    const payments = await appPrisma.payment.findMany({
+      include: {
+        formPayments: true,
+        student: true
+      },
+      orderBy: [{
+        id: 'desc'
+      }]
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(payments);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(PAYMENT_CRUD_CALLS.getMonthlyPaymentResports, async (event, args) => {
+  try {
+    const {
+      monthYear,
+      studentId
+    } = args;
+    if (studentId == null) {
+      studentId == "";
+    }
+    if (monthYear != null && monthYear.length >= 1) {
+      const dateParsed = monthYear.split('-');
+      date = new Date(dateParsed[0], dateParsed[1] - 1, 1);
+      const maxDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      const payments = await appPrisma.payment.findMany({
+        where: {
+          createdAT: {
+            gte: date,
+            lte: maxDate
+          },
+          student: {
+            collageId: {
+              startsWith: studentId
+            }
+          }
+        },
+        include: {
+          formPayments: true,
+          student: true
+        },
+        orderBy: [{
+          id: 'desc'
+        }]
+      });
+      event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(payments);
+    } else if (studentId.length > 0) {
+      const payments = await appPrisma.payment.findMany({
+        where: {
+          student: {
+            collageId: {
+              startsWith: studentId
+            }
+          }
+        },
+        include: {
+          formPayments: true,
+          student: true
+        },
+        orderBy: [{
+          id: 'desc'
+        }]
+      });
+      event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(payments);
+    } else {
+      var dateObj = new Date();
+      var date = new Date(dateObj.getFullYear(), dateObj.getMonth(), 1);
+      const payments = await appPrisma.payment.findMany({
+        where: {
+          createdAT: {
+            gte: date
+          },
+          student: {
+            collageId: {
+              startsWith: studentId
+            }
+          }
+        },
+        include: {
+          formPayments: true,
+          student: true
+        },
+        orderBy: [{
+          id: 'desc'
+        }]
+      });
+      event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(payments);
+    }
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
 
 /***/ }),
 
@@ -890,7 +1072,8 @@ ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.getStudent
         },
         id: {
           notIn: existingFormIds
-        }
+        },
+        isActive: true
       },
       include: {
         paymentType: true
@@ -8678,6 +8861,17 @@ module.exports = require("electron-store");
 
 /***/ }),
 
+/***/ "sql.js":
+/*!*************************!*\
+  !*** external "sql.js" ***!
+  \*************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("sql.js");
+
+/***/ }),
+
 /***/ "assert":
 /*!*************************!*\
   !*** external "assert" ***!
@@ -9102,6 +9296,7 @@ __webpack_require__(/*! ./main-process/user-controller */ "./main/main-process/u
 __webpack_require__(/*! ./main-process/payment-controller */ "./main/main-process/payment-controller.js");
 __webpack_require__(/*! ./main-process/departement-controller */ "./main/main-process/departement-controller.js");
 __webpack_require__(/*! ./main-process/student-controller */ "./main/main-process/student-controller.js");
+__webpack_require__(/*! ./main-process/export-import-controller */ "./main/main-process/export-import-controller.js");
 })();
 
 module.exports = __webpack_exports__;

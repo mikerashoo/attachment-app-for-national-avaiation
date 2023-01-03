@@ -5,6 +5,7 @@ import ErrorAlert from '../small_components/error_alert'
 import { CustomPageHeader, HeadingTail, ManagementHeading } from '../small_components/page_header'
 import moment from 'moment/moment'
 import { getAllDepartementsHandler } from '../../services/handlers/departement-handler'
+import { exportToExcel } from '../../utils/export_functionalities'
 const {Column} = Table
 
 const formLayout = {
@@ -103,6 +104,23 @@ const StudentManagement = () => {
 		setHasDiscount(checked);
 	  }
 
+      const downloadExcel = () => {
+        const fileName = 'student reports ' + moment().format('DD-MM-YYYY') + '.xlsx'
+        const data = [];
+        for (const student of students) { 
+             let _row = { 
+                studentId: student.collageId,
+                name: student.name,
+                departement: student.departement.name,
+                registeredAt: moment(student.registeredAt).format("D/MM/YYYY"),
+                discount: parseInt(student.discount) > 0 ? student.discount : "-",
+                isActive: student.isActive ? 'Active' : 'Inactive',
+             }
+             data.push(_row)
+        }
+        let headings = ['Student Id', 'Full Name', 'Departement', 'Registered at', 'Discount % ', 'Status']
+        exportToExcel(fileName, headings, data)
+      };
 
   return (
     
@@ -151,12 +169,12 @@ const StudentManagement = () => {
                 </Card>
         </Modal>
         <ManagementHeading title={"Students"} actionButtons={ [
-                          <Button className='bg-primary' type='primary' onClick={showModal}>Register</Button>
- 
+                          <Button className='bg-primary' type='primary' onClick={showModal}>Register</Button>,
+                          <Button className="bg-warning" onClick={()=>downloadExcel()}>Export</Button>
         ]} /> 
         {hasError && <ErrorAlert className="my-4" />  }
     
-        <Table className="pt-4" pagination={{ pageSize: 5}} rowClassName='group' loading={loading} key="id" bordered size='xs' dataSource={students} >
+        <Table className="pt-4" rowKey="id" pagination={{ pageSize: 5}} rowClassName='group' loading={loading} key="id" bordered size='xs' dataSource={students} >
             
             <Column title="ID" dataIndex="collageId" key="collageId" render={(collageId, student) => <>
                 {collageId } 

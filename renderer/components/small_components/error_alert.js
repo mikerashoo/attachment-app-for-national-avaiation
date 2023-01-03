@@ -6,4 +6,6 @@ const ErrorAlert = ({message = GENERAL_ERROR_MESSAGE}) =>
     <Alert message={message} type="error" />
   </Space>
 
+  
+
 export default ErrorAlert;

@@ -371,3 +371,125 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
     }
 })
  
+
+
+ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentsCall, async (event, args) => {
+    try{
+        const payments = await appPrisma.payment.findMany({
+            include: {
+                formPayments: true,
+                student: true
+            },
+            orderBy: [
+                {
+                    id: 'desc',
+                }
+            ]
+        })
+        event.returnValue = JSON.stringify(payments) 
+
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
+
+
+
+
+ipcMain.on(PAYMENT_CRUD_CALLS.getMonthlyPaymentResports, async (event, args) => {
+    try{
+        const { monthYear, studentId } = args;
+       
+
+        if(studentId == null) {
+            studentId == ""
+        }
+        if(monthYear != null && monthYear.length >= 1){
+            const dateParsed = monthYear.split('-');
+            
+            date = new Date(dateParsed[0], dateParsed[1] - 1, 1); 
+            const maxDate =  new Date(date.getFullYear(), date.getMonth() + 1, 0);
+            const payments = await appPrisma.payment.findMany({
+                where: {
+                    createdAT: {
+                        gte: date,
+                        lte: maxDate
+                    },
+                    student: {
+                        collageId: {
+                            startsWith: studentId
+                        }
+                    }
+                },
+                include: {
+                    formPayments: true,
+                    student: true
+                },
+                orderBy: [
+                    {
+                        id: 'desc',
+                    }
+                ]
+            })
+            event.returnValue = JSON.stringify(payments) 
+        } 
+        else if(studentId.length > 0){
+         
+            const payments = await appPrisma.payment.findMany({
+                where: {
+                    
+                    student: {
+                        collageId: {
+                            startsWith: studentId
+                        }
+                    }
+                },
+                include: {
+                    formPayments: true,
+                    student: true
+                },
+                orderBy: [
+                    {
+                        id: 'desc',
+                    }
+                ]
+            })
+            event.returnValue = JSON.stringify(payments) 
+        }
+        else {
+            var dateObj = new Date(); 
+            var date = new Date(dateObj.getFullYear(), dateObj.getMonth(), 1); 
+            const payments = await appPrisma.payment.findMany({
+                where: {
+                    createdAT: {
+                        gte: date, 
+                    },
+                    student: {
+                        collageId: {
+                            startsWith: studentId
+                        }
+                    }
+                },
+                include: {
+                    formPayments: true,
+                    student: true
+                },
+                orderBy: [
+                    {
+                        id: 'desc',
+                    }
+                ]
+            })
+            event.returnValue = JSON.stringify(payments) 
+        }
+         
+       
+
+   
+
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})

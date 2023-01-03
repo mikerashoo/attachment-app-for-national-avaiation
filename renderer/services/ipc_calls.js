@@ -17,6 +17,8 @@ export const PAYMENT_CRUD_CALLS = {
     savePaymentCall: 'save-payment',
     fetchPaymentsCall: 'get-all-payments',
     getPaymentDetailsCall: 'get-payment-details',
+    getMonthlyPaymentResports: 'get-monthly-payment-resports',
+    getStudentPaymentReports: 'get-student-payment-resports',
 }
 
 export const DEPARTEMENT_CRUD_CALLS = {
@@ -32,4 +34,9 @@ export const STUDENT_CRUD_CALLS = {
     getStudentsWithLessData: 'get-students-with-less-data',
     searchStudentsById: 'search-students-by-id',
     getStudentPaymentFormInformation: 'get-student-payment-form-information',
+}
+
+export const EXPORT_IMPORT_CALLS = {
+    exportDbCalls: 'export-db-calls',
+    importDbCalls: 'import-db-calls',
 }

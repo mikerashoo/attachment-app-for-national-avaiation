@@ -33,6 +33,9 @@ export default function Navbar() {
                     <NavLink to="/manage">
                         Managements
                     </NavLink>
+                    <NavLink to="/backup">
+                        Backups
+                    </NavLink>
                 </div>
             </div>
         </nav>  

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import {
+  Alert,
   Button,
   Card,
   Checkbox,
@@ -10,10 +11,12 @@ import {
   InputNumber,
   Layout,
   message,
+  Popconfirm,
   Radio,
   Row,
   Select,
   Skeleton,
+  Space,
 } from "antd";
 import PageLayout from "../components/layouts/PageLayout";
 import {
@@ -256,26 +259,8 @@ const searchStudent = (value, callback) => {
 								(students || []).map((student) => <Select.Option key={student.id} value={student.id}><b>{student.collageId}</b> | {student.name}</Select.Option>)
 							}
 						</Select>
-						{/* <SearchInput onStudentSelected={onStudentSelected} onStudentSearchResult={} placeholder="Search student by id"/> */}
-						</Form.Item>
-                      {/* <Form.Item
-                        className="w-full"
-                        label="Student"
-                        name="studentId"
-                        rules={[{ required: true }]}
-                      >
-                        <Select
-                          className="w-full"
-                          onChange={onStudentSelected}
-                          placeholder="Select student"
-                        >
-                          {students.map((student) => (
-                            <Select.Option value={student.id} key={student.id}>
-                              {student.collageId} | {student.name}
-                            </Select.Option>
-                          ))}
-                        </Select>
-                      </Form.Item> */}
+					 </Form.Item>
+                       
                       {student && (
                         <>
                           <Form.Item
@@ -288,8 +273,13 @@ const searchStudent = (value, callback) => {
                               onChange={onPaymentFormChange}
                               className="w-full vertical-checkbox"
                             >
-                              {paymentForms.map((paymentF) => {
-							   const depPayment = student.departement.departementPaymentPrices.find((dP) => dP.paymentTypeId === paymentF.paymentTypeId );
+                              {
+                              paymentForms.length == 0 ? (
+                                <Space direction="vertical" style={{ width: '100%' }} className="my-2"> 
+                                <Alert  message={"Looks like this student has no remaining payment. Please create new payment form or check on reports for possible payment"} type="warning" />
+                              </Space>) :
+                              paymentForms.map((paymentF) => {
+							                const depPayment = student.departement.departementPaymentPrices.find((dP) => dP.paymentTypeId === paymentF.paymentTypeId );
                                 const price = depPayment.price;
                                 let hasDiscount = false;
                                 if (
@@ -404,14 +394,22 @@ const searchStudent = (value, callback) => {
                 </Card>
 
                 <Form.Item className="mt-4">
+
+                  <Popconfirm placement="rightTop"
+                  title="Are you sure you want to save this attachment?" 
+                  okButtonProps={{type: 'default', htmlType: 'submit', className:"bg-warning"}} 
+                  okText="Yes save!"  
+                  onConfirm={form.submit}
+                  description="Please make sure all values are valid before you submit">
                   <Button
                     className="bg-primary"
-                    type="primary"
-                    htmlType="submit"
+                    type="primary" 
+                    htmlType="button"
                     size="large"
                   >
-                    Save & Print{" "}
+                    Save & Print 
                   </Button>
+                  </Popconfirm>
                 </Form.Item>
               </Form>
             </div>
