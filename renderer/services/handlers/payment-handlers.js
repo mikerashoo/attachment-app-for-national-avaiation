@@ -92,6 +92,12 @@ export const getPaymentDetailHandler = async (data) => {
     const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, data)
     return responseModifier(response)
 }
+ 
+
+export const fetchMonthlyPaymentReports = async (data) => {
+    const response = await osApi.sendSync(PAYMENT_CRUD_CALLS.getMonthlyPaymentResports, data)
+    return responseModifier(response)
+}
 
 
 const userOperations = {
