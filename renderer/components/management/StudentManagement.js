@@ -1,11 +1,12 @@
 import { Popconfirm, Table, Card, Form, Input, Col, Row, Modal, InputNumber, Select, Button, DatePicker, message, Checkbox } from 'antd' 
 import React, { useEffect, useState } from 'react'
-import { createStudentHandler, getAllStudentsHandler } from '../../services/handlers/student-handler'
+import { createStudentHandler, deleteStudentHandler, getAllStudentsHandler } from '../../services/handlers/student-handler'
 import ErrorAlert from '../small_components/error_alert'
 import { CustomPageHeader, HeadingTail, ManagementHeading } from '../small_components/page_header'
 import moment from 'moment/moment'
 import { getAllDepartementsHandler } from '../../services/handlers/departement-handler'
 import { exportToExcel } from '../../utils/export_functionalities'
+import { GENERAL_ERROR_MESSAGE } from '../../utils/error_messages'
 const {Column} = Table
 
 const formLayout = {
@@ -66,8 +67,22 @@ const StudentManagement = () => {
       fetch()
     }, [])
 
-    const deleteStudent = (id) => {}
-    const onStatusChange = (student) => {}
+    const deleteStudent = async (id) => {
+        try {
+            setLoading(true)
+            const deleteStudentResponse = await deleteStudentHandler({id});
+            console.log("DELETE STUDENT RESPONSE", deleteStudentResponse)
+           
+            message.success("Student deleted successfully");
+            const _students = students.filter((_student) => _student.id != id);
+            setStudents(_students)
+            setLoading(false)
+            
+        } catch (error) {
+            setLoading(false);
+            message.error(GENERAL_ERROR_MESSAGE)
+        }
+    } 
     const onSubmit = async (values) => { 
         try{
             if(students.filter(student => student.collageId.toLowerCase() === values.collageId.toLowerCase()).length > 0){
@@ -169,8 +184,8 @@ const StudentManagement = () => {
                 </Card>
         </Modal>
         <ManagementHeading title={"Students"} actionButtons={ [
-                          <Button className='bg-primary' type='primary' onClick={showModal}>Register</Button>,
-                          <Button className="bg-warning" onClick={()=>downloadExcel()}>Export</Button>
+                          <Button className='bg-primary' key="register" type='primary' onClick={showModal}>Register</Button>,
+                          <Button className="bg-warning" key="export" onClick={()=>downloadExcel()}>Export</Button>
         ]} /> 
         {hasError && <ErrorAlert className="my-4" />  }
     

@@ -39,4 +39,5 @@ export const STUDENT_CRUD_CALLS = {
 export const EXPORT_IMPORT_CALLS = {
     exportDbCalls: 'export-db-calls',
     importDbCalls: 'import-db-calls',
+    importDbDoneCalls: 'import-db-done-calls',
 }

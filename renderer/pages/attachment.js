@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-
+import React, { useEffect, useState } from "react"; 
 import {
   Alert,
   Button,
@@ -20,17 +19,13 @@ import {
 } from "antd";
 import PageLayout from "../components/layouts/PageLayout";
 import {
-  addPaymentHandler, 
-  fetchPaymentFormsForDepartement,
   savePaymentHandler,
 } from "../services/handlers/payment-handlers";
 import { 
-	getStudentPaymentFormInformationHandler,
-  getStudentsWithLessDataHandler,
+	getStudentPaymentFormInformationHandler, 
   searchStudentByIdHandler,
 } from "../services/handlers/student-handler"; 
-import { useRouter } from "next/router";
-import SearchInput from "../components/attachment/StudentSearchInput";
+import { useRouter } from "next/router"; 
 import ErrorAlert from "../components/small_components/error_alert";
 const { Content } = Layout;
 

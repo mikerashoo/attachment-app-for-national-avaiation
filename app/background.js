@@ -207,7 +207,8 @@ const STUDENT_CRUD_CALLS = {
 };
 const EXPORT_IMPORT_CALLS = {
   exportDbCalls: 'export-db-calls',
-  importDbCalls: 'import-db-calls'
+  importDbCalls: 'import-db-calls',
+  importDbDoneCalls: 'import-db-done-calls'
 };
 
 /***/ }),
@@ -326,9 +327,12 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.deleteDepartementCall, async (event, args) => 
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! electron */ "electron");
-/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _ipc_calls__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../ipc_calls */ "./main/ipc_calls.js");
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/json/stringify */ "./node_modules/@babel/runtime-corejs3/core-js-stable/json/stringify.js");
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! electron */ "electron");
+/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _ipc_calls__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ipc_calls */ "./main/ipc_calls.js");
+
 const {
   join
 } = __webpack_require__(/*! path */ "path");
@@ -338,61 +342,85 @@ var fs = __webpack_require__(/*! fs */ "fs");
 const path = __webpack_require__(/*! path */ "path");
 
 
-const dbFilePath = isDev ? './prisma/dev.db' : path.join(electron__WEBPACK_IMPORTED_MODULE_0__.app.getPath("userData"), "database.db");
-electron__WEBPACK_IMPORTED_MODULE_0__.ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.EXPORT_IMPORT_CALLS.exportDbCalls, async (event, args) => {
-  const filebuffer = fs.readFileSync(dbFilePath);
-  initSqlJs().then(function (SQL) {
-    // Load the db
+const dbFilePath = isDev ? './prisma/dev.db' : path.join(electron__WEBPACK_IMPORTED_MODULE_1__.app.getPath("userData"), "database.db");
+electron__WEBPACK_IMPORTED_MODULE_1__.ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_2__.EXPORT_IMPORT_CALLS.exportDbCalls, async (event, args) => {
+  try {
+    const filebuffer = fs.readFileSync(dbFilePath);
+    initSqlJs().then(function (SQL) {
+      // Load the db
 
-    const db = new SQL.Database(filebuffer);
-    const data = db.export();
-    const buffer = Buffer.from(data);
-    electron__WEBPACK_IMPORTED_MODULE_0__.dialog.showSaveDialog({
-      title: 'Select the File Path to save',
-      defaultPath: 'test-db-export.db',
-      // defaultPath: path.join(__dirname, '../assets/'),
-      buttonLabel: 'Save',
-      // Restricting the user to only Text Files.
+      const db = new SQL.Database(filebuffer);
+      const data = db.export();
+      const buffer = Buffer.from(data);
+      electron__WEBPACK_IMPORTED_MODULE_1__.dialog.showSaveDialog({
+        title: 'Select the File Path to save',
+        defaultPath: 'test-db-export.db',
+        // defaultPath: path.join(__dirname, '../assets/'),
+        buttonLabel: 'Save',
+        // Restricting the user to only Text Files.
+        filters: [{
+          name: 'sqlite',
+          extensions: ['db']
+        }],
+        properties: []
+      }).then(file => {
+        // Stating whether dialog operation was cancelled or not.
+        console.log(file.canceled);
+        if (!file.canceled) {
+          console.log(file.filePath.toString());
+          fs.writeFileSync(file.filePath.toString(), buffer);
+          const mess = {
+            message: 'success'
+          };
+          event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(mess);
+        }
+      }).catch(err => {
+        console.log(err);
+        event.returnValue = err.message;
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    event.returnValue = error.message;
+  }
+});
+electron__WEBPACK_IMPORTED_MODULE_1__.ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_2__.EXPORT_IMPORT_CALLS.importDbCalls, async (event, args) => {
+  try {
+    electron__WEBPACK_IMPORTED_MODULE_1__.dialog.showOpenDialog(fileNames => {
       filters: [{
-        name: 'sqlite',
-        extensions: ['db']
-      }],
-      properties: []
+        name: 'Images',
+        extensions: ['jpg', 'png', 'gif']
+      }];
+      if (fileNames === undefined) {
+        console.log("No file selected");
+        return;
+      }
     }).then(file => {
-      // Stating whether dialog operation was cancelled or not.
-      console.log(file.canceled);
       if (!file.canceled) {
-        console.log(file.filePath.toString());
-        fs.writeFileSync(file.filePath.toString(), buffer);
+        let _paths = file.filePaths[0].toString();
+        const filebuffer = fs.readFileSync(file.filePaths[0].toString());
+        initSqlJs().then(function (SQL) {
+          // Load the db
+
+          const db = new SQL.Database(filebuffer);
+          const data = db.export();
+          const buffer = Buffer.from(data);
+          fs.writeFileSync(dbFilePath, buffer);
+          electron__WEBPACK_IMPORTED_MODULE_1__.app.relaunch();
+          electron__WEBPACK_IMPORTED_MODULE_1__.app.exit();
+          const mess = {
+            message: 'success'
+          };
+          event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(mess);
+        });
       }
     }).catch(err => {
       console.log(err);
+      event.returnValue = err.message;
     });
-  });
-});
-electron__WEBPACK_IMPORTED_MODULE_0__.ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.EXPORT_IMPORT_CALLS.importDbCalls, async (event, args) => {
-  electron__WEBPACK_IMPORTED_MODULE_0__.dialog.showOpenDialog(fileNames => {
-    // fileNames is an array that contains all the selected
-    if (fileNames === undefined) {
-      console.log("No file selected");
-      return;
-    }
-  }).then(file => {
-    if (!file.canceled) {
-      const filebuffer = fs.readFileSync(file.filePaths[0].toString());
-      initSqlJs().then(function (SQL) {
-        // Load the db
-
-        const db = new SQL.Database(filebuffer);
-        const data = db.export();
-        const buffer = Buffer.from(data);
-        fs.writeFileSync(dbFilePath, buffer);
-      });
-      // fs.writeFileSync(file.filePath.toString(), buffer);
-    }
-  }).catch(err => {
-    console.log(err);
-  });
+  } catch (error) {
+    event.returnValue = error.message;
+  }
 });
 
 /***/ }),
@@ -966,6 +994,21 @@ ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.createStud
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(studentToReturn);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.deleteStudentCall, async (event, args) => {
+  try {
+    const {
+      id
+    } = args;
+    const deleteStudent = await appPrisma.student.delete({
+      where: {
+        id: id
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(deleteStudent);
   } catch (e) {
     event.returnValue = e.message;
   }

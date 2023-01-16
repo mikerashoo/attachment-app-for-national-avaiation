@@ -43,6 +43,22 @@ ipcMain.on(STUDENT_CRUD_CALLS.createStudentCall, async (event, args) => {
     }
 })
 
+
+ipcMain.on(STUDENT_CRUD_CALLS.deleteStudentCall, async (event, args) => {
+    try{
+        const { id} = args;
+        const deleteStudent = await appPrisma.student.delete({
+            where: {
+              id: id,
+            },
+          })
+        event.returnValue = JSON.stringify(deleteStudent)
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
+
 ipcMain.on(STUDENT_CRUD_CALLS.getStudentsWithLessData, async (event, args) => {
     try{
         const students = await appPrisma.student.findMany({
