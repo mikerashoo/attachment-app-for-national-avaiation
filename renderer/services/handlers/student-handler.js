@@ -19,6 +19,11 @@ export const createStudentHandler = async ( data) => {
 }
 
 
+export const deleteStudentHandler = async ( data) => {
+    const response = await osApi.sendSync(STUDENT_CRUD_CALLS.deleteStudentCall, data); 
+    return responseModifier(response)
+}
+
 export const searchStudentByIdHandler = async ( data) => {
     const response = await osApi.sendSync(STUDENT_CRUD_CALLS.searchStudentsById, data); 
     return responseModifier(response)

@@ -11,14 +11,15 @@ const dbFilePath =isDev ?  './prisma/dev.db': path.join(app.getPath("userData"),
 
 
 ipcMain.on(EXPORT_IMPORT_CALLS.exportDbCalls, async (event, args) => {
-   
+    try {
+        
     const filebuffer = fs.readFileSync(dbFilePath);
 
     initSqlJs().then(function(SQL){
     // Load the db
     
-    const db = new SQL.Database(filebuffer);
-    const data = db.export();
+        const db = new SQL.Database(filebuffer);
+        const data = db.export();
         const buffer = Buffer.from(data);
         dialog.showSaveDialog({
             title: 'Select the File Path to save',
@@ -38,13 +39,24 @@ ipcMain.on(EXPORT_IMPORT_CALLS.exportDbCalls, async (event, args) => {
                 console.log(file.filePath.toString());
                 
                 fs.writeFileSync(file.filePath.toString(), buffer);
+                const mess = {
+                    message: 'success'
+                }
+                event.returnValue = JSON.stringify(mess)
             }
         
         }).catch(err => {
-            console.log(err)
+            console.log(err) 
+            event.returnValue = err.message
+
         });
     });
         
+
+} catch (error) {
+    console.log(error) 
+    event.returnValue = error.message
+}
 
 
 })
@@ -52,8 +64,13 @@ ipcMain.on(EXPORT_IMPORT_CALLS.exportDbCalls, async (event, args) => {
 
 
 ipcMain.on(EXPORT_IMPORT_CALLS.importDbCalls, async (event, args) => {
-    dialog.showOpenDialog((fileNames) => {
-        // fileNames is an array that contains all the selected
+    try {
+        
+    dialog.showOpenDialog((fileNames) => { 
+        filters: [
+            { name: 'Images', extensions: ['jpg', 'png', 'gif'] },
+             
+          ]
         if(fileNames === undefined){
             console.log("No file selected");
             return;
@@ -62,7 +79,8 @@ ipcMain.on(EXPORT_IMPORT_CALLS.importDbCalls, async (event, args) => {
         
     }).then(file => {
         if (!file.canceled) {
-           
+            let _paths = file.filePaths[0].toString();
+         
             const filebuffer = fs.readFileSync(file.filePaths[0].toString());
             initSqlJs().then(function(SQL){
                 // Load the db
@@ -71,11 +89,24 @@ ipcMain.on(EXPORT_IMPORT_CALLS.importDbCalls, async (event, args) => {
                 const data = db.export();
                 const buffer = Buffer.from(data);
                 fs.writeFileSync(dbFilePath, buffer);
-            })
-            // fs.writeFileSync(file.filePath.toString(), buffer);
+
+ 
+app.relaunch()
+app.exit()
+                const mess = {
+                    message: 'success'
+                }
+                event.returnValue = JSON.stringify(mess)
+            }) 
         }
     }).catch(err => {
         console.log(err)
+        event.returnValue = err.message 
     });
+
+} catch (error) {
+    event.returnValue = error.message;
+        
+}
 });
      
