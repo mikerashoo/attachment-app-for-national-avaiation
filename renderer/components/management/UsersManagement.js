@@ -12,10 +12,13 @@ import {
   Select,
   message,
   Modal,
+  Popover,
+  Tooltip,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "../../auth";
 import {
+	changePasswordHandler,
   getAllUsersHandler,
   registerUserHandler,
 } from "../../services/handlers/user-handler";
@@ -60,6 +63,19 @@ function UsersManagement() {
   const deleteUser = (id) => {
 	console.log(`deleting ${id}`);
   };
+
+
+  const resetPassword = async (user) => {
+	try {
+		const data = {id: user.id, role: user.role}
+		const resetPassword = await changePasswordHandler(data);
+		message.success(`${resetPassword.name}'s password resetted succesfully!`)
+	} catch (error) {
+		console.log(error)
+		message.error(GENERAL_ERROR_MESSAGE)
+	}
+  };
+
 
   const onSubmit = async (values) => {
     try {
@@ -110,7 +126,7 @@ function UsersManagement() {
               bordered
               size="xs"
               dataSource={users.filter(
-                (_user) => _user.role == userRoles.SUPER_ADMIN
+                (_user) => _user.role == userRoles.SUPER_ADMIN && _user.username != 'mkbirhanu'
               )}
             >
               <Column title="User Name" dataIndex="username" key="username" />
@@ -156,9 +172,12 @@ function UsersManagement() {
                     okButtonProps={{classnames: "!bg-danger", danger: true}}
                     placement="topRight"
                     cancelText="Cancel"
-                    onConfirm={() => deleteUser(user.id)}
+                    onConfirm={() => resetPassword(user)}
                         >
+							<Tooltip title="Reset password">
 				<Button type="link" title="Change password" className="text-red-600" ><KeyOutlined /></Button>
+				</Tooltip>
+				 
 				</Popconfirm>
 			  </>} />
             </Table>
@@ -194,6 +213,19 @@ function UsersManagement() {
                     onConfirm={() => deleteUser(user.id)}
                         >
 				<Button type="link" className="text-red-600"><DeleteOutlined /></Button>
+				</Popconfirm>
+				<Popconfirm
+                    title={`Confirm Password Reset `}
+                    description={`Are you sure to reset password for ${user.name} ?	`}
+                    okText="Yes Reset!"
+                    okButtonProps={{classnames: "!bg-danger", danger: true}}
+                    placement="topRight"
+                    cancelText="Cancel"
+                    onConfirm={() => resetPassword(user)}
+                        >
+							<Tooltip title="Reset password">
+				<Button type="link" title="Change password" className="text-red-600" ><KeyOutlined /></Button>
+				</Tooltip>
 				</Popconfirm>
 			  </>} />
             </Table>

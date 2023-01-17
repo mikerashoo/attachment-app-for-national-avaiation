@@ -23,3 +23,9 @@ export const changePasswordHandler = async ( data) => {
     const response = await osApi.sendSync(USER_CRUD_CALLS.changePasswordCall, data); 
     return responseModifier(response)
 }
+
+
+export const resetPasswordHandler = async ( data) => {
+    const response = await osApi.sendSync(USER_CRUD_CALLS.resetPasswordCall, data); 
+    return responseModifier(response)
+}

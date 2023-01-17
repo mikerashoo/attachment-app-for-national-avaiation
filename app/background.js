@@ -175,7 +175,8 @@ const USER_CRUD_CALLS = {
   getAllUsersCall: 'get-all-users',
   userLoginCall: 'login-user',
   userRegisterCall: 'register-user',
-  changePasswordCall: 'change-password'
+  changePasswordCall: 'change-password',
+  resetPasswordCall: 'reset-password'
 };
 const PAYMENT_CRUD_CALLS = {
   fetchPaymentTypesCall: 'get-all-payment-types',
@@ -1233,6 +1234,45 @@ ipcMain.on(USER_CRUD_CALLS.changePasswordCall, async (event, args) => {
       id,
       password
     } = args;
+    const userData = await appPrisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        password
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(userData);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+
+/**
+ * 
+ * reset password 
+ * 
+ */
+ipcMain.on(USER_CRUD_CALLS.changePasswordCall, async (event, args) => {
+  try {
+    const {
+      id,
+      role
+    } = args;
+    let password = "";
+    switch (role) {
+      case userRoles.CASHIER:
+        password = defaultPasswords.CASHIER;
+        break;
+      case userRoles.ADMIN:
+        password = defaultPasswords.ADMIN;
+        break;
+      case userRoles.SUPER_ADMIN:
+        password = defaultPasswords.SUPER_ADMIN;
+        break;
+      default:
+        break;
+    }
     const userData = await appPrisma.user.update({
       where: {
         id

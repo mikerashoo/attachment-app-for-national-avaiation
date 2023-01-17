@@ -97,3 +97,41 @@ ipcMain.on(USER_CRUD_CALLS.changePasswordCall, async (event, args) => {
         event.returnValue = e.message
     }
 })
+
+/**
+ * 
+ * reset password 
+ * 
+ */
+ipcMain.on(USER_CRUD_CALLS.changePasswordCall, async (event, args) => {
+    try{
+        const {id, role} = args;  
+        let password = "";
+        switch (role) {
+            case userRoles.CASHIER:
+                password = defaultPasswords.CASHIER
+                break;
+                case userRoles.ADMIN:
+                password = defaultPasswords.ADMIN
+                break;
+                case userRoles.SUPER_ADMIN:
+                password = defaultPasswords.SUPER_ADMIN
+                break;
+        
+            default:
+                break;
+        }
+        const userData = await appPrisma.user.update({
+            where: {
+                id
+            },
+            data: {
+                password
+            }
+        });
+        event.returnValue = JSON.stringify(userData)
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})

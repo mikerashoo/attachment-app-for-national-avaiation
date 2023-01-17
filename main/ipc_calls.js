@@ -3,6 +3,7 @@ export const USER_CRUD_CALLS = {
     userLoginCall: 'login-user',
     userRegisterCall: 'register-user',
     changePasswordCall: 'change-password',
+    resetPasswordCall: 'reset-password',
 }
 
 export const PAYMENT_CRUD_CALLS = {
