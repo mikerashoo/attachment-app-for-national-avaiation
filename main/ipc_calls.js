@@ -1,7 +1,8 @@
 export const USER_CRUD_CALLS = {
-    getAllUsersCall: 'get-all-users',
-    createUserCall: 'create-user',
+    getAllUsersCall: 'get-all-users', 
     userLoginCall: 'login-user',
+    userRegisterCall: 'register-user',
+    changePasswordCall: 'change-password',
 }
 
 export const PAYMENT_CRUD_CALLS = {

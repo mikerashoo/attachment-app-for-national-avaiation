@@ -173,8 +173,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 const USER_CRUD_CALLS = {
   getAllUsersCall: 'get-all-users',
-  createUserCall: 'create-user',
-  userLoginCall: 'login-user'
+  userLoginCall: 'login-user',
+  userRegisterCall: 'register-user',
+  changePasswordCall: 'change-password'
 };
 const PAYMENT_CRUD_CALLS = {
   fetchPaymentTypesCall: 'get-all-payment-types',
@@ -1152,20 +1153,50 @@ const {
 const {
   default: appPrisma
 } = __webpack_require__(/*! ../my-prisma */ "./main/my-prisma.js");
-ipcMain.on(USER_CRUD_CALLS.getAllUsersCall, async event => {
+const userRoles = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ADMIN: 'ADMIN',
+  CASHIER: 'CASHIER'
+};
+const defaultPasswords = {
+  SUPER_ADMIN: '1234@super',
+  ADMIN: 'admin@1234',
+  CASHIER: 'cashier@1234'
+};
+ipcMain.on(USER_CRUD_CALLS.getAllUsersCall, async (event, args) => {
   try {
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(await appPrisma.user.findMany({}));
   } catch (e) {
     event.returnValue = e.message;
   }
 });
-ipcMain.on(USER_CRUD_CALLS.createUserCall, async (event, arg) => {
+ipcMain.on(USER_CRUD_CALLS.userRegisterCall, async (event, args) => {
   try {
-    const userData = JSON.parse(arg);
+    const {
+      name,
+      username,
+      role
+    } = args;
+    let password = "";
+    switch (role) {
+      case userRoles.CASHIER:
+        password = defaultPasswords.CASHIER;
+        break;
+      case userRoles.ADMIN:
+        password = defaultPasswords.ADMIN;
+        break;
+      case userRoles.SUPER_ADMIN:
+        password = defaultPasswords.SUPER_ADMIN;
+        break;
+      default:
+        break;
+    }
     const user = await appPrisma.user.create({
       data: {
-        email: userData.email,
-        name: userData.name
+        name,
+        username,
+        role,
+        password: password
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(user);
@@ -1183,6 +1214,31 @@ ipcMain.on(USER_CRUD_CALLS.userLoginCall, async (event, args) => {
       where: {
         username: username,
         password: password
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(userData);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+
+/**
+ * 
+ * change password 
+ * 
+ */
+ipcMain.on(USER_CRUD_CALLS.changePasswordCall, async (event, args) => {
+  try {
+    const {
+      id,
+      password
+    } = args;
+    const userData = await appPrisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        password
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(userData);

@@ -1,7 +1,6 @@
 import { USER_LOGGIN_KEY } from "../utils/constants";
 
 export async function loginUser(dispatch, user) {
-  
   try {
     
       dispatch({ type: 'LOGIN_SUCCESS', user });
