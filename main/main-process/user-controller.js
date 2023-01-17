@@ -24,6 +24,22 @@ ipcMain.on(USER_CRUD_CALLS.createUserCall, async (event, arg) => {
     catch(e){
         event.returnValue = e.message
     }
-    
+  
+})
+
+ipcMain.on(USER_CRUD_CALLS.userLoginCall, async (event, args) => {
+    try{
+        const {username, password} = args;  
+        const userData = await appPrisma.user.findFirst({
+            where: {
+                username: username,
+                password: password
+            },
+        });
+        event.returnValue = JSON.stringify(userData)
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
 
 })

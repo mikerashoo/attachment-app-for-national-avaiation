@@ -11,8 +11,10 @@ generator client {
 
 model User {
     id    Int     @id @default(autoincrement())
-    email String  @unique
+    username String  @unique
     name  String?
+    role String @default("CASHIER") 
+    password String
 }
 
 model Departement {
@@ -97,4 +99,4 @@ model PaymentFormPayment {
     paymentId     Int
     payment       Payment     @relation(fields: [paymentId], references: [id], onDelete: Cascade)
     price         Decimal
-}
+} 

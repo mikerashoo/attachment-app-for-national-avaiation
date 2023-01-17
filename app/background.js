@@ -173,7 +173,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 const USER_CRUD_CALLS = {
   getAllUsersCall: 'get-all-users',
-  createUserCall: 'create-user'
+  createUserCall: 'create-user',
+  userLoginCall: 'login-user'
 };
 const PAYMENT_CRUD_CALLS = {
   fetchPaymentTypesCall: 'get-all-payment-types',
@@ -1168,6 +1169,23 @@ ipcMain.on(USER_CRUD_CALLS.createUserCall, async (event, arg) => {
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(user);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(USER_CRUD_CALLS.userLoginCall, async (event, args) => {
+  try {
+    const {
+      username,
+      password
+    } = args;
+    const userData = await appPrisma.user.findFirst({
+      where: {
+        username: username,
+        password: password
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(userData);
   } catch (e) {
     event.returnValue = e.message;
   }
@@ -9330,6 +9348,17 @@ async function checkPaymentTypeIsSetted() {
         });
       }
       ;
+    }
+    const _users = await _my_prisma__WEBPACK_IMPORTED_MODULE_4__["default"].user.findMany();
+    if (_users.length === 0) {
+      await _my_prisma__WEBPACK_IMPORTED_MODULE_4__["default"].user.create({
+        data: {
+          name: 'Mikiyas Birhanu',
+          username: 'mkbirhanu',
+          password: '12345678',
+          role: 'SUPER_ADMIN'
+        }
+      });
     }
   } catch (error) {
     console.log(error);

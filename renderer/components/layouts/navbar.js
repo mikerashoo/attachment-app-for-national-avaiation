@@ -1,6 +1,10 @@
-import React, { Component } from "react"; 
-import { Menu } from "antd"; 
+import React, { Component, useEffect, useState } from "react"; 
+import { Button, Dropdown, Menu, Space } from "antd"; 
 import Link from "next/link";
+import { USER_LOGGIN_KEY } from "../../utils/constants";
+import { useRouter } from "next/router";
+import { DownOutlined, SmileOutlined, UserOutlined } from "@ant-design/icons";
+import { logoutUser, useAuthDispatch, useAuthState } from "../../auth";
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
@@ -12,14 +16,30 @@ function NavLink({to, children}) {
     </span>
 }
 
-export default function Navbar() { 
+export default function Navbar() {  
+    const [isLoggedIn, setIsLoggedIn] = useState(false) 
+    const userDetails = useAuthState();
+    const dispatch = useAuthDispatch();
+
+  const logout = () => {
+    logoutUser(dispatch)
+  } 
+
+  
+  const userMenu = (
+    <Menu>
+      <Menu.Item key="1">Change Password</Menu.Item> 
+      <Menu.Divider />
+      <Menu.Item key="4"></Menu.Item>
+    </Menu>
+  );
     return (
         <nav className="flex filter drop-shadow-sm bg-primary px-4 py-4 h-10 items-center">
             
             <div className="w-3/12 flex items-center">
                 <a className="text-2xl font-semibold" href="/home">NACA</a>
             </div>
-            <div className="w-9/12 flex justify-end items-center">
+            {userDetails.user && <div className="w-9/12 flex justify-end items-center">
 
                  
 
@@ -36,8 +56,10 @@ export default function Navbar() {
                     <NavLink to="/backup">
                         Backups
                     </NavLink>
+                    <Button type="link" className="text-white" onClick={logout}>Logout </Button>
+                    
                 </div>
-            </div>
+            </div> }
         </nav>  
     )
 }

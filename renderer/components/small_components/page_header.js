@@ -34,13 +34,12 @@ export const ManagementHeading = ({title, extraInformations, actionButtons}) => 
 
                 <div className="mt-5 flex lg:mt-0 lg:ml-4">
                     {
-                        actionButtons && actionButtons.map((actionButton) => (
-                            <span className="sm:ml-3">
+                        actionButtons && actionButtons.map((actionButton) =>  <span key={actionButton.key} className="sm:ml-3">
                             {
                                 actionButton
                             }
                         </span>
-                        ))
+                        )
                     }
                 </div> 
         </div>

@@ -113,6 +113,18 @@ function loadMainProcess() {
             })
         };
     }
+
+    const _users = await appPrisma.user.findMany();
+    if(_users.length === 0){
+      await appPrisma.user.create({
+        data: {
+          name: 'Mikiyas Birhanu',
+          username: 'mkbirhanu',
+          password: '12345678',
+          role: 'SUPER_ADMIN'
+        }
+      })
+    }
         
     }
     catch (error) {
