@@ -4,6 +4,7 @@ export async function loginUser(dispatch, user) {
   try {
     
       dispatch({ type: 'LOGIN_SUCCESS', user });
+      console.log("Login user", user)
       localStorage.setItem(USER_LOGGIN_KEY, JSON.stringify(user));
       return user
     

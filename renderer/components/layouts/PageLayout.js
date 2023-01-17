@@ -31,7 +31,7 @@ export default function PageLayout({ children }) {
     Loading ....
   </div>
     return (
-      <Layout className="h-full" style={{backgroundColor: "transparent"}}>
+      <Layout className="min-h-full" style={{backgroundColor: "transparent"}}>
        
         <Layout className="h-full px-8 py-4">{children}</Layout> 
       </Layout>

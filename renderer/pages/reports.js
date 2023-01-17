@@ -113,6 +113,7 @@ function Home() {
             <Column title="Payment way" dataIndex="paymentWay" key="paymentWay" />
             <Column title="Total payment" dataIndex="total" key="total" />
             <Column title="Saved at" dataIndex="createdAT" key="createdAT" render={createdAT => <> { moment(createdAT).format("D/MM/YYYY") } </>}/>
+            <Column title="Recieved By" dataIndex="user" key="user" render={user => <> { user.name } </>}/>
 
             <Column title="Actions" dataIndex="id" key="id" render={id => <> 
 				<Tooltip title="Print">

@@ -16,6 +16,8 @@ model User {
     role String @default("CASHIER") 
     password String
     isActive Boolean @default(true)
+    payments      Payment[]
+
 }
 
 model Departement {
@@ -68,6 +70,8 @@ model Payment {
     title        String
     studentId    Int
     student      Student              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+    userId    Int
+    user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
     attachmentNo String
     paymentWay   String               @default("BANK")
     checkNo      String?

@@ -27,6 +27,7 @@ import {
 } from "../services/handlers/student-handler"; 
 import { useRouter } from "next/router"; 
 import ErrorAlert from "../components/small_components/error_alert";
+import { useAuthState } from "../auth";
 const { Content } = Layout;
 
 const formItemLayout = {
@@ -56,6 +57,7 @@ const AttachmentPage = () => {
   const [title, setTitle] = useState("");
   const [paymentWay, setPaymentWay] = useState("BANK");
   const [hasPenality, setHasPenality] = useState(false);
+  const userAuth = useAuthState();
 
   useEffect(() => { 
     form.setFieldsValue({
@@ -78,10 +80,9 @@ const AttachmentPage = () => {
         return;
       }
       setIsLoading(true);
-      const data = { ...values, title };
-      console.log("data submitted", data);
+      const data = { ...values, title, userId: userAuth.user.id }; 
       const response = await savePaymentHandler(data);
-
+      
       if (response) {
         message.success("Payment saved succesfully");
         const path = "/print/" + response.id;

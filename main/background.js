@@ -120,7 +120,7 @@ function loadMainProcess() {
         data: {
           name: 'Mikiyas Birhanu',
           username: 'mkbirhanu',
-          password: '12345678',
+          password: 'mike@1234',
           role: 'SUPER_ADMIN'
         }
       })
