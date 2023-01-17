@@ -84,11 +84,11 @@ function PaymentFormManagement() {
         
         </Modal>
         <ManagementHeading title={"Payment forms"} actionButtons={ [
-                          <Button className='bg-primary' type='primary' onClick={showModal}>New Form</Button>
+                          <Button className='bg-primary' key="newForm" type='primary' onClick={showModal}>New Form</Button>
  
         ]} /> 
         {hasError && <ErrorAlert className="my-4" />  } 
-        <Table className="pt-4" pagination={{ pageSize: 10}} rowClassName='group' loading={isLoading} key="id" bordered size='xs' dataSource={paymentForms} >
+        <Table className="pt-4" pagination={{ pageSize: 10}} rowClassName='group' loading={isLoading} key="id" rowKey="id" bordered size='xs' dataSource={paymentForms} >
             <Column title="Title" dataIndex="title" key="title" />
             <Column title="Payment Type" dataIndex="paymentType" key="paymentType" render={_paymentType => <>{_paymentType.name} </>} />
             <Column title="Month" dataIndex="month" key="month" render={_month => <>{_month ?? '-'} </>} />

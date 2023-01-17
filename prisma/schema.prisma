@@ -11,8 +11,13 @@ generator client {
 
 model User {
     id    Int     @id @default(autoincrement())
-    email String  @unique
+    username String  @unique
     name  String?
+    role String @default("CASHIER") 
+    password String
+    isActive Boolean @default(true)
+    payments      Payment[]
+
 }
 
 model Departement {
@@ -65,6 +70,8 @@ model Payment {
     title        String
     studentId    Int
     student      Student              @relation(fields: [studentId], references: [id], onDelete: Cascade)
+    userId    Int
+    user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
     attachmentNo String
     paymentWay   String               @default("BANK")
     checkNo      String?
@@ -97,4 +104,4 @@ model PaymentFormPayment {
     paymentId     Int
     payment       Payment     @relation(fields: [paymentId], references: [id], onDelete: Cascade)
     price         Decimal
-}
+} 

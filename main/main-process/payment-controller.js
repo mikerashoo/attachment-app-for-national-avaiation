@@ -103,39 +103,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.createPaymentTypeCall, async (event, args) => {
 
 })
 
-
-ipcMain.on(PAYMENT_CRUD_CALLS.addPaymentCall, async (event, args) => {
-    try{
-        const {title, studentId, attachmentNo, checkNo, total, payments} = args; 
-         
-
-        const payment = await appPrisma.payment.create({
-            data: { 
-                title, studentId, attachmentNo, checkNo, total
-            }
-        });
-        payments.forEach(async (typePrice) => {
  
-             await appPrisma.paymentTypePrice.create({
-                data: {
-                    ...typePrice
-                }
-             })
-        });
-
-        const paymentResponse = await appPrisma.payment.findUnique({
-            where: {
-                id: payment.id
-            }
-        })
-        event.returnValue = JSON.stringify(paymentResponse)
-    }
-    catch(e){
-        event.returnValue = e.message
-    }
-
-})
-
 ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormsCall, async (event, args) => {
     try{
         const paymentForms = await appPrisma.paymentForm.findMany();
@@ -246,10 +214,10 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentFormsForDepartementCall, async (event,
  
 ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
     try{
-        const {title, studentId, attachmentNo, paymentWay, checkNo, penality, total, selectedPaymentForms} = args;
+        const {title, studentId, userId, attachmentNo, paymentWay, checkNo, penality, total, selectedPaymentForms} = args;
         const payment = await appPrisma.payment.create({
-            data: {title: title, studentId: parseInt(studentId), attachmentNo, paymentWay, checkNo, penality: penality, total}
-        })
+            data: {title: title, studentId: parseInt(studentId), attachmentNo, paymentWay, checkNo, penality: penality, total, userId}
+        }) 
  
         //GET STUDENT 
         const student = await appPrisma.student.findUnique({
@@ -296,7 +264,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
                 id: payment.id
             },
             include: {
-                formPayments: true
+                formPayments: true,
+                user: true
             }
         })
 
@@ -314,7 +283,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentsCall, async (event, args) => {
         const payments = await appPrisma.payment.findMany({
             include: {
                 formPayments: true,
-                student: true
+                student: true,
+                user: true
             },
             orderBy: [
                 {
@@ -361,7 +331,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
                             }
                         }
                     }
-                }
+                },
+                user: true
             },
         })
         event.returnValue = JSON.stringify(payment) ;
@@ -378,7 +349,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentsCall, async (event, args) => {
         const payments = await appPrisma.payment.findMany({
             include: {
                 formPayments: true,
-                student: true
+                student: true,
+                user: true
             },
             orderBy: [
                 {
@@ -424,7 +396,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getMonthlyPaymentResports, async (event, args) => 
                 },
                 include: {
                     formPayments: true,
-                    student: true
+                    student: true,
+                    user: true
                 },
                 orderBy: [
                     {
@@ -447,7 +420,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getMonthlyPaymentResports, async (event, args) => 
                 },
                 include: {
                     formPayments: true,
-                    student: true
+                    student: true,
+                    user: true
                 },
                 orderBy: [
                     {
@@ -473,7 +447,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getMonthlyPaymentResports, async (event, args) => 
                 },
                 include: {
                     formPayments: true,
-                    student: true
+                    student: true,
+                    user: true
                 },
                 orderBy: [
                     {

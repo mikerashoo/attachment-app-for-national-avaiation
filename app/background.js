@@ -173,14 +173,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 const USER_CRUD_CALLS = {
   getAllUsersCall: 'get-all-users',
-  createUserCall: 'create-user'
+  userLoginCall: 'login-user',
+  userRegisterCall: 'register-user',
+  changePasswordCall: 'change-password',
+  resetPasswordCall: 'reset-password'
 };
 const PAYMENT_CRUD_CALLS = {
   fetchPaymentTypesCall: 'get-all-payment-types',
   createPaymentTypeCall: 'create-payment-type',
   checkAndInitializePaymentTypesCall: 'check-and-initialize-payment-types',
   changePaymentTypeStatusCall: 'change-payment-type-status',
-  addPaymentCall: 'add-payment-call',
   fetchPaymentFormsCall: 'get-all-payment-forms',
   createPaymentFormCall: 'create-payment-form',
   fetchPaymentFormDataCall: 'get-payment-form-data',
@@ -441,18 +443,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_corejs3_core_js_stable_instance_filter__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_instance_filter__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptor */ "./node_modules/@babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptor.js");
 /* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptors */ "./node_modules/@babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptors.js");
-/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_define_properties__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/object/define-properties */ "./node_modules/@babel/runtime-corejs3/core-js-stable/object/define-properties.js");
-/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_define_properties__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_object_define_properties__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_define_property__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/object/define-property */ "./node_modules/@babel/runtime-corejs3/core-js-stable/object/define-property.js");
-/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_define_property__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_object_define_property__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _babel_runtime_corejs3_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime-corejs3/helpers/defineProperty */ "./node_modules/@babel/runtime-corejs3/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_corejs3_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_instance_for_each__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/instance/for-each */ "./node_modules/@babel/runtime-corejs3/core-js-stable/instance/for-each.js");
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_instance_for_each__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_instance_for_each__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptors */ "./node_modules/@babel/runtime-corejs3/core-js-stable/object/get-own-property-descriptors.js");
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_define_properties__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/object/define-properties */ "./node_modules/@babel/runtime-corejs3/core-js-stable/object/define-properties.js");
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_define_properties__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_object_define_properties__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_define_property__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/object/define-property */ "./node_modules/@babel/runtime-corejs3/core-js-stable/object/define-property.js");
+/* harmony import */ var _babel_runtime_corejs3_core_js_stable_object_define_property__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_object_define_property__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_corejs3_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime-corejs3/helpers/defineProperty */ "./node_modules/@babel/runtime-corejs3/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_corejs3_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/json/stringify */ "./node_modules/@babel/runtime-corejs3/core-js-stable/json/stringify.js");
 /* harmony import */ var _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var _babel_runtime_corejs3_core_js_stable_instance_for_each__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/instance/for-each */ "./node_modules/@babel/runtime-corejs3/core-js-stable/instance/for-each.js");
-/* harmony import */ var _babel_runtime_corejs3_core_js_stable_instance_for_each__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_instance_for_each__WEBPACK_IMPORTED_MODULE_8__);
 /* harmony import */ var _babel_runtime_corejs3_core_js_stable_parse_int__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/parse-int */ "./node_modules/@babel/runtime-corejs3/core-js-stable/parse-int.js");
 /* harmony import */ var _babel_runtime_corejs3_core_js_stable_parse_int__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs3_core_js_stable_parse_int__WEBPACK_IMPORTED_MODULE_10__);
 /* harmony import */ var _babel_runtime_corejs3_core_js_stable_instance_find__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @babel/runtime-corejs3/core-js-stable/instance/find */ "./node_modules/@babel/runtime-corejs3/core-js-stable/instance/find.js");
@@ -465,9 +467,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function ownKeys(object, enumerableOnly) { var keys = _babel_runtime_corejs3_core_js_stable_object_keys__WEBPACK_IMPORTED_MODULE_0___default()(object); if ((_babel_runtime_corejs3_core_js_stable_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_1___default())) { var symbols = _babel_runtime_corejs3_core_js_stable_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_1___default()(object); enumerableOnly && (symbols = _babel_runtime_corejs3_core_js_stable_instance_filter__WEBPACK_IMPORTED_MODULE_2___default()(symbols).call(symbols, function (sym) { return _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3___default()(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var _context2, _context3; var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? _babel_runtime_corejs3_core_js_stable_instance_for_each__WEBPACK_IMPORTED_MODULE_8___default()(_context2 = ownKeys(Object(source), !0)).call(_context2, function (key) { _babel_runtime_corejs3_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(target, key, source[key]); }) : (_babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_4___default()) ? _babel_runtime_corejs3_core_js_stable_object_define_properties__WEBPACK_IMPORTED_MODULE_5___default()(target, _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_4___default()(source)) : _babel_runtime_corejs3_core_js_stable_instance_for_each__WEBPACK_IMPORTED_MODULE_8___default()(_context3 = ownKeys(Object(source))).call(_context3, function (key) { _babel_runtime_corejs3_core_js_stable_object_define_property__WEBPACK_IMPORTED_MODULE_6___default()(target, key, _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3___default()(source, key)); }); } return target; }
 
+function ownKeys(object, enumerableOnly) { var keys = _babel_runtime_corejs3_core_js_stable_object_keys__WEBPACK_IMPORTED_MODULE_0___default()(object); if ((_babel_runtime_corejs3_core_js_stable_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_1___default())) { var symbols = _babel_runtime_corejs3_core_js_stable_object_get_own_property_symbols__WEBPACK_IMPORTED_MODULE_1___default()(object); enumerableOnly && (symbols = _babel_runtime_corejs3_core_js_stable_instance_filter__WEBPACK_IMPORTED_MODULE_2___default()(symbols).call(symbols, function (sym) { return _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3___default()(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var _context2, _context3; var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? _babel_runtime_corejs3_core_js_stable_instance_for_each__WEBPACK_IMPORTED_MODULE_4___default()(_context2 = ownKeys(Object(source), !0)).call(_context2, function (key) { _babel_runtime_corejs3_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8___default()(target, key, source[key]); }) : (_babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_5___default()) ? _babel_runtime_corejs3_core_js_stable_object_define_properties__WEBPACK_IMPORTED_MODULE_6___default()(target, _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptors__WEBPACK_IMPORTED_MODULE_5___default()(source)) : _babel_runtime_corejs3_core_js_stable_instance_for_each__WEBPACK_IMPORTED_MODULE_4___default()(_context3 = ownKeys(Object(source))).call(_context3, function (key) { _babel_runtime_corejs3_core_js_stable_object_define_property__WEBPACK_IMPORTED_MODULE_7___default()(target, key, _babel_runtime_corejs3_core_js_stable_object_get_own_property_descriptor__WEBPACK_IMPORTED_MODULE_3___default()(source, key)); }); } return target; }
 
 
 
@@ -567,40 +569,6 @@ ipcMain.on(PAYMENT_CRUD_CALLS.createPaymentTypeCall, async (event, args) => {
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(payment);
-  } catch (e) {
-    event.returnValue = e.message;
-  }
-});
-ipcMain.on(PAYMENT_CRUD_CALLS.addPaymentCall, async (event, args) => {
-  try {
-    const {
-      title,
-      studentId,
-      attachmentNo,
-      checkNo,
-      total,
-      payments
-    } = args;
-    const payment = await appPrisma.payment.create({
-      data: {
-        title,
-        studentId,
-        attachmentNo,
-        checkNo,
-        total
-      }
-    });
-    _babel_runtime_corejs3_core_js_stable_instance_for_each__WEBPACK_IMPORTED_MODULE_8___default()(payments).call(payments, async typePrice => {
-      await appPrisma.paymentTypePrice.create({
-        data: _objectSpread({}, typePrice)
-      });
-    });
-    const paymentResponse = await appPrisma.payment.findUnique({
-      where: {
-        id: payment.id
-      }
-    });
-    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(paymentResponse);
   } catch (e) {
     event.returnValue = e.message;
   }
@@ -705,6 +673,7 @@ ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
     const {
       title,
       studentId,
+      userId,
       attachmentNo,
       paymentWay,
       checkNo,
@@ -720,7 +689,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
         paymentWay,
         checkNo,
         penality: penality,
-        total
+        total,
+        userId
       }
     });
 
@@ -772,7 +742,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.savePaymentCall, async (event, args) => {
         id: payment.id
       },
       include: {
-        formPayments: true
+        formPayments: true,
+        user: true
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(paymentResponse);
@@ -785,7 +756,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentsCall, async (event, args) => {
     const payments = await appPrisma.payment.findMany({
       include: {
         formPayments: true,
-        student: true
+        student: true,
+        user: true
       },
       orderBy: [{
         id: 'desc'
@@ -825,7 +797,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getPaymentDetailsCall, async (event, args) => {
               }
             }
           }
-        }
+        },
+        user: true
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_9___default()(payment);
@@ -838,7 +811,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.fetchPaymentsCall, async (event, args) => {
     const payments = await appPrisma.payment.findMany({
       include: {
         formPayments: true,
-        student: true
+        student: true,
+        user: true
       },
       orderBy: [{
         id: 'desc'
@@ -876,7 +850,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getMonthlyPaymentResports, async (event, args) => 
         },
         include: {
           formPayments: true,
-          student: true
+          student: true,
+          user: true
         },
         orderBy: [{
           id: 'desc'
@@ -894,7 +869,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getMonthlyPaymentResports, async (event, args) => 
         },
         include: {
           formPayments: true,
-          student: true
+          student: true,
+          user: true
         },
         orderBy: [{
           id: 'desc'
@@ -917,7 +893,8 @@ ipcMain.on(PAYMENT_CRUD_CALLS.getMonthlyPaymentResports, async (event, args) => 
         },
         include: {
           formPayments: true,
-          student: true
+          student: true,
+          user: true
         },
         orderBy: [{
           id: 'desc'
@@ -1151,23 +1128,134 @@ const {
 const {
   default: appPrisma
 } = __webpack_require__(/*! ../my-prisma */ "./main/my-prisma.js");
-ipcMain.on(USER_CRUD_CALLS.getAllUsersCall, async event => {
+const userRoles = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  ADMIN: 'ADMIN',
+  CASHIER: 'CASHIER'
+};
+const defaultPasswords = {
+  SUPER_ADMIN: '1234@super',
+  ADMIN: 'admin@1234',
+  CASHIER: 'cashier@1234'
+};
+ipcMain.on(USER_CRUD_CALLS.getAllUsersCall, async (event, args) => {
   try {
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(await appPrisma.user.findMany({}));
   } catch (e) {
     event.returnValue = e.message;
   }
 });
-ipcMain.on(USER_CRUD_CALLS.createUserCall, async (event, arg) => {
+ipcMain.on(USER_CRUD_CALLS.userRegisterCall, async (event, args) => {
   try {
-    const userData = JSON.parse(arg);
+    const {
+      name,
+      username,
+      role
+    } = args;
+    let password = "";
+    switch (role) {
+      case userRoles.CASHIER:
+        password = defaultPasswords.CASHIER;
+        break;
+      case userRoles.ADMIN:
+        password = defaultPasswords.ADMIN;
+        break;
+      case userRoles.SUPER_ADMIN:
+        password = defaultPasswords.SUPER_ADMIN;
+        break;
+      default:
+        break;
+    }
     const user = await appPrisma.user.create({
       data: {
-        email: userData.email,
-        name: userData.name
+        name,
+        username,
+        role,
+        password: password
       }
     });
     event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(user);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+ipcMain.on(USER_CRUD_CALLS.userLoginCall, async (event, args) => {
+  try {
+    const {
+      username,
+      password
+    } = args;
+    const userData = await appPrisma.user.findFirst({
+      where: {
+        username: username,
+        password: password
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(userData);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+
+/**
+ * 
+ * change password 
+ * 
+ */
+ipcMain.on(USER_CRUD_CALLS.changePasswordCall, async (event, args) => {
+  try {
+    const {
+      id,
+      password
+    } = args;
+    const userData = await appPrisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        password
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(userData);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+
+/**
+ * 
+ * reset password 
+ * 
+ */
+ipcMain.on(USER_CRUD_CALLS.changePasswordCall, async (event, args) => {
+  try {
+    const {
+      id,
+      role
+    } = args;
+    let password = "";
+    switch (role) {
+      case userRoles.CASHIER:
+        password = defaultPasswords.CASHIER;
+        break;
+      case userRoles.ADMIN:
+        password = defaultPasswords.ADMIN;
+        break;
+      case userRoles.SUPER_ADMIN:
+        password = defaultPasswords.SUPER_ADMIN;
+        break;
+      default:
+        break;
+    }
+    const userData = await appPrisma.user.update({
+      where: {
+        id
+      },
+      data: {
+        password
+      }
+    });
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(userData);
   } catch (e) {
     event.returnValue = e.message;
   }
@@ -9330,6 +9418,17 @@ async function checkPaymentTypeIsSetted() {
         });
       }
       ;
+    }
+    const _users = await _my_prisma__WEBPACK_IMPORTED_MODULE_4__["default"].user.findMany();
+    if (_users.length === 0) {
+      await _my_prisma__WEBPACK_IMPORTED_MODULE_4__["default"].user.create({
+        data: {
+          name: 'Mikiyas Birhanu',
+          username: 'mkbirhanu',
+          password: 'mike@1234',
+          role: 'SUPER_ADMIN'
+        }
+      });
     }
   } catch (error) {
     console.log(error);

@@ -166,7 +166,8 @@ const PrintComponent = React.forwardRef((props, ref) => {
                 <div className="text-start w-fit">
 
                     <div>Reciever name and signature </div>
-                    <div className="my-2">Name ______________________________</div>
+                    <div className="my-2">Name <span className='underline'>{payment.user.name}</span> </div>
+                    
                     <div>Signiture ______________________</div>
                      </div>
                 </Col>

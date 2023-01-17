@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react'; 
 import {Layout, Menu } from 'antd'; 
 import { UserOutlined, DollarOutlined, BookOutlined, AlignRightOutlined } from '@ant-design/icons'; 
-import UsersComponent from '../components/management/users'; 
+import UsersComponent from '../components/management/UsersManagement'; 
 import PageLayout from '../components/layouts/PageLayout';
 import PaymentTypeManagement from '../components/management/PaymentTypesManagement';
 import DepartementManagement from '../components/management/DepartementManagement';
 import StudentManagement from '../components/management/StudentManagement';
 import PaymentFormManagement from '../components/management/PaymentFormManagement';
+import UsersManagement from '../components/management/UsersManagement';
 const { Header, Content, Sider } = Layout; 
 const menuKeys = {
-	'students': 'students',
+	'users': 'users', 
+	'students': 'students', 
     'payments': 'payments',
     'departement': 'departement',
     'paymentForms': 'paymentForms',
@@ -17,10 +19,16 @@ const menuKeys = {
 
 const ManagementPage = () => { 
    
-  const [selectedKey, setSelectedKey] = useState(menuKeys.students);
+  const [selectedKey, setSelectedKey] = useState(menuKeys.users);
    
 
   const myItems = [ 
+    {
+      key: menuKeys.users,  
+      label: "Users ",
+      icon: <UserOutlined />,
+
+    },
     {
         key: menuKeys.departement,  
         label: "Departement ",
@@ -80,6 +88,7 @@ const ManagementPage = () => {
 			<Layout className='w-full'>
 					<Content className='p-4 bg-white ml-2 border-1 w-full'> 
                      
+                        {selectedKey === menuKeys.users && <UsersManagement />}
                         {selectedKey === menuKeys.students && <StudentManagement />}
                         {selectedKey === menuKeys.payments && <PaymentTypeManagement />}
                         {selectedKey === menuKeys.departement && <DepartementManagement />}

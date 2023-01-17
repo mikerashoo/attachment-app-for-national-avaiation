@@ -1,8 +1,7 @@
-import React, { Component } from "react"; 
-import { Menu } from "antd"; 
-import Link from "next/link";
-const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
+import React, { useState } from "react"; 
+import {  Menu } from "antd"; 
+import Link from "next/link"; 
+import {  useAuthDispatch, useAuthState } from "../../auth"; 
 
 
 function NavLink({to, children}) {
@@ -12,14 +11,16 @@ function NavLink({to, children}) {
     </span>
 }
 
-export default function Navbar() { 
+export default function Navbar() {   
+    const userDetails = useAuthState(); 
+ 
     return (
         <nav className="flex filter drop-shadow-sm bg-primary px-4 py-4 h-10 items-center">
             
             <div className="w-3/12 flex items-center">
                 <a className="text-2xl font-semibold" href="/home">NACA</a>
             </div>
-            <div className="w-9/12 flex justify-end items-center">
+            {userDetails.user && <div className="w-9/12 flex justify-end items-center">
 
                  
 
@@ -36,8 +37,10 @@ export default function Navbar() {
                     <NavLink to="/backup">
                         Backups
                     </NavLink>
+                    
+                    
                 </div>
-            </div>
+            </div> }
         </nav>  
     )
 }
