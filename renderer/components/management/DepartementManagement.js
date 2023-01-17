@@ -59,10 +59,7 @@ function DepartementManagement() {
 
     const onSubmit = async (values) => { 
         try{
-            if(departements.filter(dep => dep.name.toLowerCase() === values.name.toLowerCase()).length > 0){
-                message.error("Departement with the same name already exists!");
-                return;
-            }
+
             setLoading(true) 
             const data = {
                 ...values
@@ -120,8 +117,43 @@ function DepartementManagement() {
                         onFinish={onSubmit} 
                         >
                         
-                        <Form.Item label="Name" name='name' rules={[{required: true}]}>
+                        <Form.Item label="Name" name='name' rules={[{required: true}, {
+					message: `Departement with same name already exists `,
+					validator: (_, value) => {
+						 
+
+					  if (departements.filter((_departements) => _departements.name.toLowerCase() == value.toLowerCase()).length == 0) {
+						return Promise.resolve();
+					  } else {
+						return Promise.reject('validation error');
+					  }
+					 }}]}>
                             <Input placeholder="Enter name here" />
+                        </Form.Item>  
+                        <Form.Item label="Code" name='code' rules={[{required: true}, {
+					message: `Departement with same code already exists `,
+					validator: (_, value) => {
+
+					  if (departements.filter((_departements) => _departements.code.toLowerCase() == value.toLowerCase()).length == 0) {
+						return Promise.resolve();
+					  } else {
+						return Promise.reject('validation error');
+					  }
+					 }},
+
+                     {
+                        message: `Only single word allowed. Use _ for multiple words`,
+                        validator: (_, value) => {
+    
+                          if (value.split(' ').length == 1) {
+                            return Promise.resolve();
+                          } else {
+                            return Promise.reject('validation error');
+                          }
+                         }},
+                     
+                     ]}>
+                            <Input placeholder="Enter unique code" />
                         </Form.Item>  
                         <Row gutter={[16, 16]}>
                             <Col span={12}>
@@ -141,7 +173,7 @@ function DepartementManagement() {
                                 <Form.Item label="Payment Type" name="paymentTypeId" rules={[{required: true, message:"Payment type is required"}]}>
                                     <Select>
                                         {
-                                            paymentTypes.filter(paymentType => paymentType.isPaymentWay).map(paymentType => <Select.Option value={paymentType.id}> {
+                                            paymentTypes.filter(paymentType => paymentType.isPaymentWay).map(paymentType => <Select.Option key={paymentType.id} value={paymentType.id}> {
                                                     paymentType.name
                                                 } </Select.Option>)
                                         }
@@ -179,7 +211,8 @@ function DepartementManagement() {
       </Row>
        {hasError && <ErrorAlert className="my-4" />  }
     
-        <Table className="pt-4" pagination={{ pageSize: 5}} rowClassName='group' loading={loading} key="id" bordered size='sm' dataSource={departements} >
+        <Table className="pt-4" pagination={{ pageSize: 5}} rowClassName='group' loading={loading} key="id" rowKey="id" bordered size='sm' dataSource={departements} >
+        <Column title="Code" dataIndex="code" key="code" />
             
             <Column title="Name" dataIndex="name" key="name" render={(name, departement) => (
                 <>

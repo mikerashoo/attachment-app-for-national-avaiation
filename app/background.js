@@ -252,6 +252,7 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementCall, async (event, args) => 
   try {
     const {
       name,
+      code,
       totalCreditHour,
       pricePerCreditHour,
       paymentTypeId,
@@ -266,6 +267,7 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementCall, async (event, args) => 
     const departement = await appPrisma.departement.create({
       data: {
         name,
+        code,
         totalCreditHour,
         pricePerCreditHour,
         paymentTypeId,

@@ -253,7 +253,7 @@ function UsersManagement() {
 					validator: (_, value) => {
 						 
 
-					  if (users.filter((_user) => _user.username == value).length == 0) {
+					  if (users.filter((_user) => _user.username.toLowerCase() == value.toLowerCase()).length == 0) {
 						return Promise.resolve();
 					  } else {
 						return Promise.reject('User name is taken');
