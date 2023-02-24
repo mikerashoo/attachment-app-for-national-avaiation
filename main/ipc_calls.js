@@ -36,6 +36,7 @@ export const STUDENT_CRUD_CALLS = {
     getStudentsWithLessData: 'get-students-with-less-data',
     searchStudentsById: 'search-students-by-id',
     getStudentPaymentFormInformation: 'get-student-payment-form-information',
+    importStudentsCall: 'import-students-call'
 }
 
 export const EXPORT_IMPORT_CALLS = {

@@ -205,7 +205,8 @@ const STUDENT_CRUD_CALLS = {
   deleteStudentCall: 'delete-student',
   getStudentsWithLessData: 'get-students-with-less-data',
   searchStudentsById: 'search-students-by-id',
-  getStudentPaymentFormInformation: 'get-student-payment-form-information'
+  getStudentPaymentFormInformation: 'get-student-payment-form-information',
+  importStudentsCall: 'import-students-call'
 };
 const EXPORT_IMPORT_CALLS = {
   exportDbCalls: 'export-db-calls',
@@ -252,6 +253,7 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementCall, async (event, args) => 
   try {
     const {
       name,
+      code,
       totalCreditHour,
       pricePerCreditHour,
       paymentTypeId,
@@ -266,6 +268,7 @@ ipcMain.on(DEPARTEMENT_CRUD_CALLS.createDepartementCall, async (event, args) => 
     const departement = await appPrisma.departement.create({
       data: {
         name,
+        code,
         totalCreditHour,
         pricePerCreditHour,
         paymentTypeId,
@@ -1105,6 +1108,78 @@ ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.getStudent
     event.returnValue = e.message;
   }
 });
+ipcMain.on(_ipc_calls__WEBPACK_IMPORTED_MODULE_1__.STUDENT_CRUD_CALLS.importStudentsCall, async (event, args) => {
+  try {
+    let savedRows = [];
+    let failedRows = [];
+    const {
+      students
+    } = args;
+    for (const student of students) {
+      const {
+        index,
+        name,
+        departementId,
+        collageId,
+        discount
+      } = student;
+      try {
+        const newStudent = await appPrisma.student.create({
+          data: {
+            name,
+            departementId,
+            collageId,
+            discount: discount
+          }
+        });
+        savedRows.push(newStudent);
+      } catch (error) {
+        failedRows.push(index);
+        console.log(error);
+      }
+    }
+    const resp = {
+      savedRows,
+      failedRows
+    };
+    event.returnValue = _babel_runtime_corejs3_core_js_stable_json_stringify__WEBPACK_IMPORTED_MODULE_0___default()(resp);
+  } catch (e) {
+    event.returnValue = e.message;
+  }
+});
+
+// Invalid `appPrisma.student.create()` invocation in
+// /Users/mikiasbirhanu/projects/attachment-app-for-national-avaiation/app/background.js:1127:33
+
+//   1124   discount
+//   1125 } = student;
+//   1126 try {
+// → 1127   await appPrisma.student.create({
+//            data: {
+//          +   name: String,
+//              departementId: undefined,
+//          +   collageId: String,
+//          ?   discount?: Int | null,
+//          +   departement: {
+//          +     create?: DepartementCreateWithoutStudentsInput | DepartementUncheckedCreateWithoutStudentsInput,
+//          +     connectOrCreate?: DepartementCreateOrConnectWithoutStudentsInput,
+//          +     connect?: DepartementWhereUniqueInput
+//          +   },
+//          ?   registeredAt?: DateTime,
+//          ?   payments?: {
+//          ?     create?: PaymentCreateWithoutStudentInput | PaymentCreateWithoutStudentInput | PaymentUncheckedCreateWithoutStudentInput | PaymentUncheckedCreateWithoutStudentInput,
+//          ?     connectOrCreate?: PaymentCreateOrConnectWithoutStudentInput | PaymentCreateOrConnectWithoutStudentInput,
+//          ?     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput
+//          ?   },
+//          ?   isActive?: Boolean
+//            }
+//          })
+
+// Argument name for data.name is missing.
+// Argument collageId for data.collageId is missing.
+// Argument departement for data.departement is missing.
+
+// Note: Lines with + are required, lines with ? are optional.
 
 /***/ }),
 

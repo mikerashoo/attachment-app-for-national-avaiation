@@ -23,6 +23,7 @@ model User {
 model Departement {
     id                       Int                       @id @default(autoincrement())
     name                     String                    @unique
+    code                     String                    @unique
     totalCreditHour          Int
     pricePerCreditHour       Decimal
     departementPaymentPrices DepartementPaymentPrice[]

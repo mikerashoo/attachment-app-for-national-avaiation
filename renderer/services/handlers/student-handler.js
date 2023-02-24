@@ -34,3 +34,8 @@ export const getStudentPaymentFormInformationHandler = async ( data) => {
     const response = await osApi.sendSync(STUDENT_CRUD_CALLS.getStudentPaymentFormInformation, data); 
     return responseModifier(response)
 }
+
+export const importStudentsCall = async ( data) => {
+    const response = await osApi.sendSync(STUDENT_CRUD_CALLS.importStudentsCall, data); 
+    return responseModifier(response)
+}
