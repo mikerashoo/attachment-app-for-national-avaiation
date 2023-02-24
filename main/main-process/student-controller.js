@@ -184,3 +184,76 @@ ipcMain.on(STUDENT_CRUD_CALLS.getStudentPaymentFormInformation, async (event, ar
         event.returnValue = e.message  
     }
 })
+
+
+
+
+ipcMain.on(STUDENT_CRUD_CALLS.importStudentsCall, async (event, args) => {
+    try{
+        let savedRows = [];
+        let failedRows = [];
+       
+
+        const { students } = args 
+       
+        for (const student of students){
+       
+        
+    
+            const {index, name, departementId, collageId, discount} = student;
+            try {
+                const newStudent = await appPrisma.student.create({
+                    data: {name, departementId, collageId, discount: discount }
+                })
+               
+               savedRows.push(newStudent)
+            } catch (error) { 
+                failedRows.push(index)
+                console.log(error)
+            }
+        }
+       
+        const resp = {
+            savedRows,
+            failedRows
+        }
+      
+        event.returnValue = JSON.stringify(resp) 
+    }
+    catch(e){
+        event.returnValue = e.message
+    }
+})
+
+// Invalid `appPrisma.student.create()` invocation in
+// /Users/mikiasbirhanu/projects/attachment-app-for-national-avaiation/app/background.js:1127:33
+
+//   1124   discount
+//   1125 } = student;
+//   1126 try {
+// → 1127   await appPrisma.student.create({
+//            data: {
+//          +   name: String,
+//              departementId: undefined,
+//          +   collageId: String,
+//          ?   discount?: Int | null,
+//          +   departement: {
+//          +     create?: DepartementCreateWithoutStudentsInput | DepartementUncheckedCreateWithoutStudentsInput,
+//          +     connectOrCreate?: DepartementCreateOrConnectWithoutStudentsInput,
+//          +     connect?: DepartementWhereUniqueInput
+//          +   },
+//          ?   registeredAt?: DateTime,
+//          ?   payments?: {
+//          ?     create?: PaymentCreateWithoutStudentInput | PaymentCreateWithoutStudentInput | PaymentUncheckedCreateWithoutStudentInput | PaymentUncheckedCreateWithoutStudentInput,
+//          ?     connectOrCreate?: PaymentCreateOrConnectWithoutStudentInput | PaymentCreateOrConnectWithoutStudentInput,
+//          ?     connect?: PaymentWhereUniqueInput | PaymentWhereUniqueInput
+//          ?   },
+//          ?   isActive?: Boolean
+//            }
+//          })
+
+// Argument name for data.name is missing.
+// Argument collageId for data.collageId is missing.
+// Argument departement for data.departement is missing.
+
+// Note: Lines with + are required, lines with ? are optional.

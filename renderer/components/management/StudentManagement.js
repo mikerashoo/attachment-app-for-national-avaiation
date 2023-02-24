@@ -1,12 +1,14 @@
-import { Popconfirm, Table, Card, Form, Input, Col, Row, Modal, InputNumber, Select, Button, DatePicker, message, Checkbox } from 'antd' 
+import { Popconfirm, Table, Card, Form, Input, PageHeader, Row, Modal, InputNumber, Select, Button, DatePicker, message, Checkbox, Descriptions } from 'antd' 
 import React, { useEffect, useState } from 'react'
-import { createStudentHandler, deleteStudentHandler, getAllStudentsHandler } from '../../services/handlers/student-handler'
+import { createStudentHandler, deleteStudentHandler, getAllStudentsHandler, importStudentsCall } from '../../services/handlers/student-handler'
 import ErrorAlert from '../small_components/error_alert'
 import { CustomPageHeader, HeadingTail, ManagementHeading } from '../small_components/page_header'
 import moment from 'moment/moment'
 import { getAllDepartementsHandler } from '../../services/handlers/departement-handler'
 import { exportToExcel } from '../../utils/export_functionalities'
 import { GENERAL_ERROR_MESSAGE } from '../../utils/error_messages'
+import readXlsxFile from 'read-excel-file'
+import { WarningFilled, WarningOutlined, ClearOutlined, CloseOutlined } from '@ant-design/icons'
 const {Column} = Table
 
 const formLayout = {
@@ -25,7 +27,11 @@ const StudentManagement = () => {
 
     const [form,] = Form.useForm(); 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [hasDiscount, setHasDiscount] = useState(false);
+    const [studentsToImport, setStudentsToImport] = useState([]); 
+    const [failedRows, setFailedRows] = useState([]);
+    const [saveImportFailedRows, setSaveImportFailedRow] = useState([]);
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -42,6 +48,15 @@ const StudentManagement = () => {
         form.resetFields();
         setHasDiscount(false) 
       }; 
+
+      const handleOnImportModalOk = () => {
+        setIsImportModalOpen(false);
+        setSaveImportFailedRow([]);
+ 
+        setStudentsToImport([])
+        setFailedRows([])
+        form.resetFields();
+      }
 
     const fetch = async ()  => {
         try {
@@ -137,9 +152,254 @@ const StudentManagement = () => {
         exportToExcel(fileName, headings, data)
       };
 
+
+      const importExcel =  () =>{
+        setIsImportModalOpen(true);
+      }
+
+      const onImportFileChanged = async (e) => {
+        try {
+            console.log(e)
+        const file = e.target.files[0]; 
+        readXlsxFile(file).then((rows) => {
+            setFailedRows([])
+            setStudentsToImport([])
+            setSaveImportFailedRow([])
+            if(rows.length == 0){
+                message.error("No rows found")
+                return;
+            }
+            let _students = []; 
+            let _failedRows = [];
+            for(const row of rows){
+                try {
+                    
+                    if(rows.indexOf(row) == 0) continue;
+
+                    const studentId = row[0];
+                    const name = row[1];
+                    const code = row[2]; 
+                    let discount = 0; 
+
+
+                    let currentRow = {
+                        studentId: studentId,
+                        name: name,
+                        depCode: code,
+                        discount:  discount,
+                        departement: departements.find(dep => dep.code.toLowerCase() == code.toLowerCase()) ?? null,
+                        errors: []
+                    } 
+                    let hasError = false;
+                    if(row[3] != null){ 
+                        try {
+                            const _discount = parseInt(row[3])
+                            if(_discount < 0 || _discount > 100){
+                                currentRow.errors.push("Invalid value for discount percent");
+                                _failedRows.push(currentRow)
+
+                                hasError = true;
+                            }
+                            else {
+                                currentRow.discount = _discount;
+                            }
+                        } catch (error) {
+                            currentRow.errors.push("Invalid value for discount percent");
+                        _failedRows.push(currentRow)
+                        hasError = true;
+                            
+                        } 
+                    }
+
+                    console.log("Discount", currentRow);
+                    if(students.find((_st) => _st.collageId.toLowerCase() == studentId.toLowerCase() || rows.filter(_row => _row[0].toLowerCase() == studentId.toLowerCase()).length > 1) != null){
+                        currentRow.errors.push("StudentId is already taken")
+                        _failedRows.push(currentRow)
+                        hasError = true;
+                    }
+                    console.log("StudentId", currentRow)
+                    if( departements.find(dep => dep.code.toLowerCase() == code.toLowerCase()) == null){
+                        currentRow.errors.push("Departement code not found")
+
+                        _failedRows.push(currentRow)
+                        hasError = true;
+                    }
+                    console.log("departement", currentRow)
+
+                if(hasError) continue;
+                    _students.push(currentRow)
+                } catch (error) {
+                    console.log("error : ", error)
+                    if(failedRows.indexOf(currentRow) == -1){
+                        failedRows.push(currentRow);
+
+                    }
+                }
+                
+            }
+            console.log("students : ", _students)
+            console.log("failedRows : ", _failedRows)
+            setStudentsToImport(_students); 
+            setFailedRows(_failedRows);
+            // `rows` is an array of rows
+            // each row being an array of cells.
+          }).catch((e) =>{
+            setFailedRows([])
+            setStudentsToImport([]); 
+
+            console.log("--------------------------------")
+            message.error("Failed to read a file. Please make sure you selected valid excel file")
+            console.log(e);
+          });
+        }catch(e){
+            console.log(e);
+        }
+        
+      } 
+
+      const saveImportToDb = async () => {
+        try {
+            setLoading(true);
+              const data = {
+                    students: [...studentsToImport.map(((_st, index) =>  {
+                        return {
+                            index: index,
+                            name: _st.name,
+                            departementId: _st.departement.id,
+                            collageId: _st.studentId,
+                            discount: _st.discount ?? 0,
+                        }
+
+                    }))]
+                }
+                console.log("data", data);
+                const importCall = await importStudentsCall(data);
+                console.log(importCall)
+                setLoading(false);
+                message.success(`${importCall.savedCount} imported successfully!`)
+                let importedStudents = []
+                importCall.savedRows.every((_student) => {
+                    importedStudents.push(_student);
+
+                });
+                const withNewStudents = [...students, ...importedStudents];
+                setStudents(withNewStudents)
+                if(importCall.failedRows.length == 0){
+
+                    handleOnImportModalOk();
+                    return; 
+                }
+                let _failedRows = [];
+                importCall.failedRows.every((failedIndex) => {
+                    _failedRows.push(studentsToImport[failedIndex]);
+
+                })
+               
+                console.log("_failedRows", _failedRows);
+                setSaveImportFailedRow(_failedRows);
+ 
+                setStudentsToImport([])
+                setFailedRows([])
+
+        } catch (error) {
+            console.log(error);
+            message.error(GENERAL_ERROR_MESSAGE)
+        }
+      
+      }  
   return (
     
     <div>
+        <Modal title="Import Student Data" width={1000} open={isImportModalOpen} footer={null} onOk={handleOnImportModalOk} onCancel={handleOnImportModalOk} destroyOnClose={true}>
+            <Card>
+            <Input type='file' placeholder='Import Excel' onChange={onImportFileChanged} />
+            {
+                (studentsToImport.length > 0 || failedRows.length > 0 ) && <>
+                    <div className="lg:flex lg:items-center lg:justify-between mb-4">
+                        <div className="min-w-0 flex-1 mt-4">
+                            <h2 className="text-lg font-bold leading-7 txt-primary">
+                            Students to be imported
+                            </h2>
+                            
+                            <Popconfirm
+                            title={`Save students to DB`}
+                            description="Are you sure you want to import these rows to database"
+                            okText="Yes save!"
+                            okButtonProps={{classnames: "!bg-danger", danger: true}}
+                            placement="topRight"
+                            cancelText="Cancel"
+                            onConfirm={() => saveImportToDb()}
+                                >
+                            
+                            <Button className='bg-success'>Save Imports</Button>
+                            </Popconfirm>
+                        
+                            <div className='grid grid-cols-3'>
+                                <div>   Total rows : </div>
+                                <div className='text-green-600 pr-2'>    {studentsToImport.length}  : Valid rows </div>
+                                <div className='text-red-600 pr-2'> {failedRows.length} Rows has error  </div>
+
+                            </div>
+                        </div>
+                 </div></>
+            }
+
+{
+                    saveImportFailedRows.length > 0 && <> 
+                   <ErrorAlert message="This rows are failed to be saved! Please check and try again this rows" />
+                    <Table className="pt-4" rowKey="studentId"  pagination={{ pageSize: 5}}  rowClassName='text-red-600' loading={loading} key="id" bordered size='xs' dataSource={saveImportFailedRows} >
+                            <Column title="Student ID" dataIndex="studentId" key="studentId" />
+                            <Column title="Full Name" dataIndex="name" key="name" />
+                            <Column title="Departement code" dataIndex="depCode" key="depCode"  />
+                            <Column title="Discount" dataIndex="discount" key="discount" render={discount => parseInt(discount) > 0 ? discount : '-' } />
+                            
+                            <Column title="Reason" dataIndex="errors" key="errors" render={errors => <>
+                                { errors.map(e => <p key={e} className='text-danger'><CloseOutlined/> {e}</p>)}
+                            </>} />
+
+                        </Table>
+                    </>
+                }
+
+                {
+                    failedRows.length > 0 && <> 
+                    <b>
+                        This rows have an issue
+                    </b>
+                    <Table className="pt-4" rowKey="studentId"  pagination={{ pageSize: 5}}  rowClassName='text-red-600' loading={loading} key="id" bordered size='xs' dataSource={failedRows} >
+                            <Column title="Student ID" dataIndex="studentId" key="studentId" />
+                            <Column title="Full Name" dataIndex="name" key="name" />
+                            <Column title="Departement code" dataIndex="depCode" key="depCode"  />
+                            <Column title="Discount" dataIndex="discount" key="discount" render={discount => parseInt(discount) > 0 ? discount : '-' } />
+                            
+                            <Column title="Reason" dataIndex="errors" key="errors" render={errors => <>
+                                { errors.map(e => <p key={e} className='text-danger'><CloseOutlined/> {e}</p>)}
+                            </>} />
+
+                        </Table>
+                    </>
+                }
+                   {
+                     studentsToImport.length > 0 && <> 
+                        <b>Passed rows</b>
+                        <Table className="pt-4" rowKey="studentId"  pagination={{ pageSize: 5}}  loading={loading} key="id" bordered size='xs' dataSource={studentsToImport} >
+                            <Column title="Student ID" dataIndex="studentId" key="studentId" />
+                            <Column title="Full Name" dataIndex="name" key="name" />
+                            <Column title="Departement" dataIndex="departement" key="departement" render={departement => departement != null ? departement.name : '-' } />
+                            <Column title="Discount" dataIndex="discount" key="discount" render={discount => parseInt(discount) > 0 ? discount : '-' } />
+                            
+                        </Table>
+                        </>
+                    }   
+                  
+               
+
+                   
+                    
+
+           
+            </Card>
+        </Modal>
         <Modal title="Register New Student" open={isModalOpen}   footer={null} onOk={handleOk} onCancel={handleCancel} destroyOnClose={true}>
         
             <Card loading={loading} >
@@ -185,7 +445,9 @@ const StudentManagement = () => {
         </Modal>
         <ManagementHeading title={"Students"} actionButtons={ [
                           <Button className='bg-primary' key="register" type='primary' onClick={showModal}>Register</Button>,
-                          <Button className="bg-warning" key="export" onClick={()=>downloadExcel()}>Export</Button>
+                          <Button className="bg-warning" key="export" onClick={()=>downloadExcel()}>Export to Excel</Button>,
+                         
+                          <Button className="bg-success" key="import" onClick={()=>importExcel()}>Import from Excel</Button>
         ]} /> 
         {hasError && <ErrorAlert className="my-4" />  }
     

@@ -21,7 +21,7 @@ export const ManagementHeading = ({title, extraInformations, actionButtons}) => 
                 {
                     extraInformations && <div className="mt-1 flex flex-col sm:mt-0 sm:flex-row sm:flex-wrap sm:space-x-6">
                             {
-                                extraInformations.map((extra) => <div className="mt-2 flex items-center text-sm text-gray-500"> 
+                                extraInformations.map((extra) => <div key={extra.key} className="mt-2 flex items-center text-sm text-gray-500"> 
                                     {extra.icon ? extra.icon : <InfoOutlined />}
                                     {
                                         extra.info
